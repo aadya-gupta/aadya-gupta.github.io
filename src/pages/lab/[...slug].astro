@@ -1,0 +1,27 @@
+---
+import { getCollection, render } from 'astro:content'; // 1. Import 'render'
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const labEntries = await getCollection('lab');
+  return labEntries.map(entry => ({
+    params: { slug: entry.id }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry); // 2. Use 'render(entry)' instead of 'entry.render()'
+---
+
+<BaseLayout title={entry.data.title} activePage="lab">
+  <div class="dot-grid p-12">
+    <h1 class="text-3xl font-bold mb-4">{entry.data.title}</h1>
+    <div class="mb-8 opacity-60 font-mono">
+      {entry.data.date.toLocaleDateString()} | Status: {entry.data.status}
+    </div>
+    
+    <article class="prose max-w-none">
+      <Content />
+    </article>
+  </div>
+</BaseLayout>

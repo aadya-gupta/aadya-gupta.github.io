@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #F4EFE6;
+    color: #2D2926;
+    font-family: 'Courier Prime', monospace;
+  }
+}
+
+@layer utilities {
+  .dot-grid {
+    background-image: radial-gradient(#d1ccc0 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}

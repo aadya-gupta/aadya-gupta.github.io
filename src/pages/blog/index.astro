@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// This fetches everything in your src/content/blog/ folder
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title="Blog" activePage="blog">
+  <div class="dot-grid p-8">
+    <h1 class="text-2xl font-bold mb-8">Blog</h1>
+    
+    <ul class="space-y-6">
+      {posts.map((post) => (
+        <li class="border-b border-ink/20 pb-4">
+          <a href={`/blog/${post.id}`} class="text-lg hover:underline">
+            {post.data.title}
+          </a>
+          <div class="text-sm opacity-70 mt-1">
+            {post.data.date.toLocaleDateString()}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

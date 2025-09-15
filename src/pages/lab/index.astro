@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Fetch your research logs and sort them by date
+const labEntries = (await getCollection('lab')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title="Lab Notebook" activePage="lab">
+  <div class="dot-grid min-h-[50vh] p-8">
+    <h1 class="text-2xl font-bold mb-8">Lab Notebook</h1>
+    
+    <ul class="space-y-6">
+      {labEntries.map((entry) => (
+        <li class="border-b border-ink/20 pb-4">
+          <a href={`/lab/${entry.id}`} class="text-lg hover:underline">
+            {entry.data.title}
+          </a>
+          <div class="flex gap-4 text-sm mt-1 opacity-70">
+            <span>{entry.data.date.toLocaleDateString()}</span>
+            <span class="bg-ink text-paper px-2 rounded">{entry.data.status}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
