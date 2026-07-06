@@ -1,3 +1,10 @@
+---
+title: "PINN for Gliostama"
+date: 2026-07-06
+status: "Experiment"
+tags: ["physics-informed", "medical-ai"]
+---
+
 # PINN for Glioblastoma
 
 This is a fun exploration I did about Physics Informed Neural Networks.
