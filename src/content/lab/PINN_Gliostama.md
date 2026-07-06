@@ -1,21 +1,64 @@
 ---
-title: "PINN for Gliostama"
-date: 2026-07-06
+title: "PINN for Glioblastoma"
+date: 2026-01-15
 status: "Experiment"
-tags: ["physics-informed", "medical-ai"]
+tags: ["AI", "Research", "PINN"]
 ---
+
+
 
 # PINN for Glioblastoma
 
 This is a fun exploration I did about Physics Informed Neural Networks.
 
 
-Started with installing the important libraries.
+
 
 ```python
 !pip install nibabel matplotlib numpy torch
 ```
-Then the dataset.
+
+    Requirement already satisfied: nibabel in /usr/local/lib/python3.12/dist-packages (5.3.3)
+    Requirement already satisfied: matplotlib in /usr/local/lib/python3.12/dist-packages (3.10.0)
+    Requirement already satisfied: numpy in /usr/local/lib/python3.12/dist-packages (2.0.2)
+    Requirement already satisfied: torch in /usr/local/lib/python3.12/dist-packages (2.9.0+cu126)
+    Requirement already satisfied: packaging>=20 in /usr/local/lib/python3.12/dist-packages (from nibabel) (25.0)
+    Requirement already satisfied: typing-extensions>=4.6 in /usr/local/lib/python3.12/dist-packages (from nibabel) (4.15.0)
+    Requirement already satisfied: contourpy>=1.0.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (1.3.3)
+    Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (0.12.1)
+    Requirement already satisfied: fonttools>=4.22.0 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (4.61.1)
+    Requirement already satisfied: kiwisolver>=1.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (1.4.9)
+    Requirement already satisfied: pillow>=8 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (11.3.0)
+    Requirement already satisfied: pyparsing>=2.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (3.2.5)
+    Requirement already satisfied: python-dateutil>=2.7 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (2.9.0.post0)
+    Requirement already satisfied: filelock in /usr/local/lib/python3.12/dist-packages (from torch) (3.20.0)
+    Requirement already satisfied: setuptools in /usr/local/lib/python3.12/dist-packages (from torch) (75.2.0)
+    Requirement already satisfied: sympy>=1.13.3 in /usr/local/lib/python3.12/dist-packages (from torch) (1.14.0)
+    Requirement already satisfied: networkx>=2.5.1 in /usr/local/lib/python3.12/dist-packages (from torch) (3.6.1)
+    Requirement already satisfied: jinja2 in /usr/local/lib/python3.12/dist-packages (from torch) (3.1.6)
+    Requirement already satisfied: fsspec>=0.8.5 in /usr/local/lib/python3.12/dist-packages (from torch) (2025.3.0)
+    Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.6.77 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.77)
+    Requirement already satisfied: nvidia-cuda-runtime-cu12==12.6.77 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.77)
+    Requirement already satisfied: nvidia-cuda-cupti-cu12==12.6.80 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.80)
+    Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in /usr/local/lib/python3.12/dist-packages (from torch) (9.10.2.21)
+    Requirement already satisfied: nvidia-cublas-cu12==12.6.4.1 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.4.1)
+    Requirement already satisfied: nvidia-cufft-cu12==11.3.0.4 in /usr/local/lib/python3.12/dist-packages (from torch) (11.3.0.4)
+    Requirement already satisfied: nvidia-curand-cu12==10.3.7.77 in /usr/local/lib/python3.12/dist-packages (from torch) (10.3.7.77)
+    Requirement already satisfied: nvidia-cusolver-cu12==11.7.1.2 in /usr/local/lib/python3.12/dist-packages (from torch) (11.7.1.2)
+    Requirement already satisfied: nvidia-cusparse-cu12==12.5.4.2 in /usr/local/lib/python3.12/dist-packages (from torch) (12.5.4.2)
+    Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in /usr/local/lib/python3.12/dist-packages (from torch) (0.7.1)
+    Requirement already satisfied: nvidia-nccl-cu12==2.27.5 in /usr/local/lib/python3.12/dist-packages (from torch) (2.27.5)
+    Requirement already satisfied: nvidia-nvshmem-cu12==3.3.20 in /usr/local/lib/python3.12/dist-packages (from torch) (3.3.20)
+    Requirement already satisfied: nvidia-nvtx-cu12==12.6.77 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.77)
+    Requirement already satisfied: nvidia-nvjitlink-cu12==12.6.85 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.85)
+    Requirement already satisfied: nvidia-cufile-cu12==1.11.1.6 in /usr/local/lib/python3.12/dist-packages (from torch) (1.11.1.6)
+    Requirement already satisfied: triton==3.5.0 in /usr/local/lib/python3.12/dist-packages (from torch) (3.5.0)
+    Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.7->matplotlib) (1.17.0)
+    Requirement already satisfied: mpmath<1.4,>=1.1.0 in /usr/local/lib/python3.12/dist-packages (from sympy>=1.13.3->torch) (1.3.0)
+    Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.12/dist-packages (from jinja2->torch) (3.0.3)
+
+
+
 ```python
 import kagglehub
 
@@ -149,7 +192,7 @@ plt.show()
 
 
     
-![png](PINN_Gliostama_files/PINN_Gliostama_6_1.png)
+![png](output_7_1.png)
     
 
 
@@ -260,7 +303,7 @@ else:
 
 
     
-![png](PINN_Gliostama_files/PINN_Gliostama_7_1.png)
+![png](output_8_1.png)
     
 
 
@@ -317,7 +360,7 @@ plt.show()
 
 
     
-![png](PINN_Gliostama_files/PINN_Gliostama_8_1.png)
+![png](output_9_1.png)
     
 
 
@@ -478,7 +521,7 @@ plt.show()
 
 
     
-![png](PINN_Gliostama_files/PINN_Gliostama_11_1.png)
+![png](output_12_1.png)
     
 
 
@@ -526,7 +569,7 @@ plt.show()
 
 
     
-![png](PINN_Gliostama_files/PINN_Gliostama_12_0.png)
+![png](output_13_0.png)
     
 
 
@@ -604,7 +647,7 @@ plt.show()
 
 
     
-![png](PINN_Gliostama_files/PINN_Gliostama_13_1.png)
+![png](output_14_1.png)
     
 
 
@@ -776,6 +819,6 @@ plt.show()
 
 
     
-![png](PINN_Gliostama_files/PINN_Gliostama_15_1.png)
+![png](output_16_1.png)
     
 
