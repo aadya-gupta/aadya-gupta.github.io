@@ -19,25 +19,31 @@
 }
 
 /* Notebook code cell styling */
+/* Style for Code Cells (Inputs) */
 pre {
-  background-color: #dcd7ca !important; /* Slightly darker than paper for better contrast */
-  border: 1px solid #c8c3b7;
+  background-color: #e8e3d9 !important; /* Slightly lighter/warm tone */
+  border: 1px solid #d1ccc0 !important;
   border-radius: 6px;
   padding: 1rem;
   margin: 1.5rem 0;
   overflow-x: auto;
 }
 
-/* Force all text inside code blocks to be dark #2D2926 */
-pre code, pre span {
+/* Style for Output Cells */
+/* If your nbconvert adds a specific class like 'output' to these, use it! */
+/* Otherwise, we can style the background of pre blocks that are inside output containers */
+.output_subarea pre {
+  background-color: #dcd7ca !important; /* A slightly darker "shadow" tone */
+  border-left: 4px solid #b3ad9f !important; /* A clear indicator on the left */
+  border-right: 1px solid #d1ccc0 !important;
+  border-top: 1px solid #d1ccc0 !important;
+  border-bottom: 1px solid #d1ccc0 !important;
+}
+
+/* Force all text inside these to be your dark ink color */
+pre code, pre span, .output_subarea pre code {
   color: #2D2926 !important;
   text-shadow: none !important;
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
-}
-
-/* If the output is wrapped in a specific class by nbconvert */
-.output_subarea {
-  color: #2D2926 !important;
-  background-color: transparent !important;
 }
