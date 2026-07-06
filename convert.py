@@ -9,6 +9,10 @@ def convert_notebook(notebook_path, output_dir):
 
     exporter = MarkdownExporter()
     body, resources = exporter.from_notebook_node(nb)
+    if 'outputs' in resources:
+        for filename, data in resources['outputs'].items():
+            with open(os.path.join(output_dir, filename), 'wb') as f:
+                f.write(data)
 
     # 1. Ensure the frontmatter is at the very top
     # This regex looks for the block between --- and ---
