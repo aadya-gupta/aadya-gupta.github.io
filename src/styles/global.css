@@ -28,8 +28,14 @@ pre {
   overflow-x: auto;
 }
 
-pre code {
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  color: #2D2926; /* Consistent with your theme */
+pre, code {
+  color: #2D2926 !important; /* Force your dark ink color */
+  background-color: #e8e3d9 !important; /* Force your paper background */
+  text-shadow: none !important;
+}
+
+/* If the output is wrapped in a specific class by nbconvert */
+.output_subarea {
+  color: #2D2926 !important;
+  background-color: transparent !important;
 }
