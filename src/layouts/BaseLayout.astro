@@ -4,27 +4,25 @@ const { title, activePage } = Astro.props;
 ---
 <html lang="en">
   <head>
-  <meta charset="utf-8" />
+    <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <title>Aadya</title>
   </head>
-  <body class="bg-paper text-ink min-h-screen font-mono py-12">
-    <div class="px-6 md:px-12">
-      <nav class="flex justify-end gap-8 mb-16 text-lg">
-        {/* Show Home only if we are NOT on the home page */}
+  <body class="bg-paper text-ink min-h-screen font-mono py-8 md:py-12">
+    <!-- Changed px-6 to px-4 for mobile, md:px-12 for larger screens -->
+    <div class="px-4 md:px-12">
+      
+      <!-- Added flex-wrap and gap-4/6 for mobile spacing -->
+      <nav class="flex flex-wrap justify-end gap-x-6 gap-y-2 mb-12 md:mb-16 text-base md:text-lg">
         {activePage !== 'home' && <a href="/">Home</a>}
-        
-        {/* Show Blog only if we are NOT on the blog page */}
         {activePage !== 'blog' && <a href="/blog">Blog</a>}
-        
-        {/* Show Lab only if we are NOT on the lab page */}
         {activePage !== 'lab' && <a href="/lab">Lab</a>}
-        
         <a href="/cv.pdf" target="_blank">CV</a>
         <a href="https://github.com/aadya-gupta">Github</a>
-    </nav>
-      <main class="max-w-4xl mx-auto">
+      </nav>
+      
+      <main class="max-w-4xl mx-auto w-full">
         <slot />
       </main>
     </div>

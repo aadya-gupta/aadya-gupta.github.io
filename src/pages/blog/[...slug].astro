@@ -13,9 +13,13 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<BaseLayout title={post.data.title} activePage="blog">
-  <article class="prose max-w-4xl mx-auto">
-    <h1>{post.data.title}</h1>
+<BaseLayout title={entry.data.title} activePage="blog">
+  <a href="/lab" class="inline-block mb-8 text-sm opacity-60 hover:opacity-100 transition-opacity">
+    ← Back to Blog
+  </a>
+
+  <article class="prose max-w-none">
+    <h1 class="text-3xl font-bold mb-4">{entry.data.title}</h1>
     <Content />
   </article>
 </BaseLayout>
