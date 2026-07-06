@@ -17,3 +17,19 @@
     background-size: 20px 20px;
   }
 }
+
+/* Notebook code cell styling */
+pre {
+  background-color: #e8e3d9; /* Slightly darker than paper to create a distinct 'cell' */
+  border: 1px solid #d1ccc0;  /* Subtle border matching your dot-grid color */
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+pre code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #2D2926; /* Consistent with your theme */
+}
