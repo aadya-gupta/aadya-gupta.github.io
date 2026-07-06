@@ -18,24 +18,52 @@
   }
 }
 
-/* Notebook code cell styling */
+/* Base Pre/Code Styles */
 pre {
-  background-color: #e8e3d9; /* Slightly darker than paper to create a distinct 'cell' */
-  border: 1px solid #d1ccc0;  /* Subtle border matching your dot-grid color */
   border-radius: 6px;
   padding: 1rem;
   margin: 1.5rem 0;
   overflow-x: auto;
-}
-
-pre, code {
-  color: #2D2926 !important; /* Force your dark ink color */
-  background-color: #e8e3d9 !important; /* Force your paper background */
-  text-shadow: none !important;
-}
-
-/* If the output is wrapped in a specific class by nbconvert */
-.output_subarea {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
   color: #2D2926 !important;
-  background-color: transparent !important;
+}
+
+/* Code Input Cells */
+.input pre, pre.astro-code {
+  background-color: #e8e3d9 !important;
+  border: 1px solid #d1ccc0 !important;
+}
+
+/* Output Cells */
+.output pre, pre:not(.astro-code) {
+  background-color: #dcd7ca !important;
+  border: 1px solid #c8c3b7 !important;
+  border-left: 5px solid #8e8a7f !important;
+}
+
+/* Collapsible Dropdown Styles */
+summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #d1ccc0;
+}
+
+summary::before {
+  content: '▶';
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+/* Ensure readability */
+pre code, pre span {
+  color: #2D2926 !important;
 }
