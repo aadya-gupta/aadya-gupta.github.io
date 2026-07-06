@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+// Fetch all photo folders automatically
+const allPhotos = await getCollection('photos');
+---
+
+<Layout title="Photography | Aadya">
+  <main class="max-w-4xl mx-auto px-6 py-12">
+    <h1 class="text-3xl font-bold mb-10 border-b pb-4 border-[#d1ccc0]">Photography</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      {allPhotos.map(async (photo) => {
+        const { Content } = await photo.render();
+        return (
+          <div class="flex flex-col">
+            <Image 
+              src={photo.data.cover} 
+              alt={photo.data.alt} 
+              class="w-full h-auto object-cover rounded-md border border-[#d1ccc0] shadow-sm mb-4"
+            />
+            <div class="text-sm italic opacity-80 font-['Courier_New']">
+              <Content />
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  </main>
+</Layout>

@@ -1,43 +1,77 @@
 import nbformat
-from nbconvert import MarkdownExporter
 import os
-import re
+import base64
 
 def convert_notebook(notebook_path, output_dir):
     with open(notebook_path, 'r', encoding='utf-8') as f:
         nb = nbformat.read(f, as_version=4)
 
-    exporter = MarkdownExporter()
-    body, resources = exporter.from_notebook_node(nb)
-    if 'outputs' in resources:
-        for filename, data in resources['outputs'].items():
-            with open(os.path.join(output_dir, filename), 'wb') as f:
-                f.write(data)
+    md_content = []
+    frontmatter = ""
 
-    # 1. Ensure the frontmatter is at the very top
-    # This regex looks for the block between --- and ---
-    frontmatter_match = re.search(r'---.*?---', body, re.DOTALL)
+    for idx, cell in enumerate(nb.cells):
+        # 1. Grab Frontmatter
+        if idx == 0 and cell.cell_type == 'markdown' and cell.source.strip().startswith('---'):
+            frontmatter = cell.source + "\n\n"
+            continue
+        
+        # 2. Markdown cells
+        if cell.cell_type == 'markdown':
+            md_content.append(cell.source + "\n\n")
+        
+        # 3. Process Code Cells
+        elif cell.cell_type == 'code':
+            md_content.append(f"```python\n{cell.source}\n```\n")
+            
+            if cell.outputs:
+                text_outputs = []
+                image_outputs = []
+                
+                # Separate text logs from image plots
+                for o_idx, out in enumerate(cell.outputs):
+                    if out.output_type == 'stream':
+                        text = out.text.replace('<', '&lt;').replace('>', '&gt;')
+                        text_outputs.append(f"<pre><code>{text}</code></pre>\n")
+                    
+                    elif out.output_type in ['execute_result', 'display_data']:
+                        if 'image/png' in out.data:
+                            img_data = out.data['image/png']
+                            base_name = os.path.basename(notebook_path).replace('.ipynb', '')
+                            img_filename = f"{base_name}_plot_{idx}_{o_idx}.png"
+                            img_path = os.path.join(output_dir, img_filename)
+                            
+                            with open(img_path, 'wb') as img_f:
+                                img_f.write(base64.b64decode(img_data))
+                            
+                            # Add to image list instead of text list
+                            image_outputs.append(f"\n![plot]({img_filename})\n\n")
+                        
+                        elif 'text/plain' in out.data:
+                            text = out.data['text/plain'].replace('<', '&lt;').replace('>', '&gt;')
+                            text_outputs.append(f"<pre><code>{text}</code></pre>\n")
+                    
+                    elif out.output_type == 'error':
+                        text_outputs.append(f"<pre><code style='color:#d9534f;'>{out.ename}: {out.evalue}</code></pre>\n")
+                
+                # Wrap ONLY the text logs in the dropdown
+                if text_outputs:
+                    md_content.append('<details class="output-wrapper"><summary>▶ View Output</summary>\n')
+                    md_content.extend(text_outputs)
+                    md_content.append('</details>\n\n')
+                
+                # Append the images completely outside the dropdown
+                if image_outputs:
+                    md_content.extend(image_outputs)
+
+    # 4. Assemble and Save
+    final_md = frontmatter + "".join(md_content)
     
-    if frontmatter_match:
-        frontmatter = frontmatter_match.group(0)
-        # Remove the frontmatter from the body to reposition it
-        body = body.replace(frontmatter, "")
-        # Add it back at the very top
-        body = frontmatter + "\n\n" + body
-
-    # 2. Wrap output cells in <details>
-    # This targets the standard output block pattern
-    body = body.replace('<div class="output_subarea">', 
-                        '<details><summary class="cursor-pointer font-bold opacity-60 hover:opacity-100">▶ View Output</summary>\n<div class="output_subarea">')
-    body = body.replace('</div>', '</div></details>')
-
-    # Save
     filename = os.path.basename(notebook_path).replace('.ipynb', '.md')
-    with open(os.path.join(output_dir, filename), 'w', encoding='utf-8') as f:
-        f.write(body)
+    out_path = os.path.join(output_dir, filename)
+    with open(out_path, 'w', encoding='utf-8') as f:
+        f.write(final_md)
     
-    print(f"Metadata injected and converted: {filename}")
+    print(f"Successfully constructed perfect HTML for: {filename}")
 
 if __name__ == "__main__":
-    # Point this to your actual notebook file
-    convert_notebook('notebooks/PINN_Gliostama.ipynb', 'src/content/lab/')
+    convert_notebook('notebooks/PINN_Glioblastoma.ipynb', 'src/content/lab/')

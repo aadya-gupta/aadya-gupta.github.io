@@ -5,59 +5,56 @@ status: "Experiment"
 tags: ["AI", "Research", "PINN"]
 ---
 
-
-
 # PINN for Glioblastoma
 
 This is a fun exploration I did about Physics Informed Neural Networks.
 
 
 
-
 ```python
 !pip install nibabel matplotlib numpy torch
 ```
-
-    Requirement already satisfied: nibabel in /usr/local/lib/python3.12/dist-packages (5.3.3)
-    Requirement already satisfied: matplotlib in /usr/local/lib/python3.12/dist-packages (3.10.0)
-    Requirement already satisfied: numpy in /usr/local/lib/python3.12/dist-packages (2.0.2)
-    Requirement already satisfied: torch in /usr/local/lib/python3.12/dist-packages (2.9.0+cu126)
-    Requirement already satisfied: packaging>=20 in /usr/local/lib/python3.12/dist-packages (from nibabel) (25.0)
-    Requirement already satisfied: typing-extensions>=4.6 in /usr/local/lib/python3.12/dist-packages (from nibabel) (4.15.0)
-    Requirement already satisfied: contourpy>=1.0.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (1.3.3)
-    Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (0.12.1)
-    Requirement already satisfied: fonttools>=4.22.0 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (4.61.1)
-    Requirement already satisfied: kiwisolver>=1.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (1.4.9)
-    Requirement already satisfied: pillow>=8 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (11.3.0)
-    Requirement already satisfied: pyparsing>=2.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (3.2.5)
-    Requirement already satisfied: python-dateutil>=2.7 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (2.9.0.post0)
-    Requirement already satisfied: filelock in /usr/local/lib/python3.12/dist-packages (from torch) (3.20.0)
-    Requirement already satisfied: setuptools in /usr/local/lib/python3.12/dist-packages (from torch) (75.2.0)
-    Requirement already satisfied: sympy>=1.13.3 in /usr/local/lib/python3.12/dist-packages (from torch) (1.14.0)
-    Requirement already satisfied: networkx>=2.5.1 in /usr/local/lib/python3.12/dist-packages (from torch) (3.6.1)
-    Requirement already satisfied: jinja2 in /usr/local/lib/python3.12/dist-packages (from torch) (3.1.6)
-    Requirement already satisfied: fsspec>=0.8.5 in /usr/local/lib/python3.12/dist-packages (from torch) (2025.3.0)
-    Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.6.77 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.77)
-    Requirement already satisfied: nvidia-cuda-runtime-cu12==12.6.77 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.77)
-    Requirement already satisfied: nvidia-cuda-cupti-cu12==12.6.80 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.80)
-    Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in /usr/local/lib/python3.12/dist-packages (from torch) (9.10.2.21)
-    Requirement already satisfied: nvidia-cublas-cu12==12.6.4.1 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.4.1)
-    Requirement already satisfied: nvidia-cufft-cu12==11.3.0.4 in /usr/local/lib/python3.12/dist-packages (from torch) (11.3.0.4)
-    Requirement already satisfied: nvidia-curand-cu12==10.3.7.77 in /usr/local/lib/python3.12/dist-packages (from torch) (10.3.7.77)
-    Requirement already satisfied: nvidia-cusolver-cu12==11.7.1.2 in /usr/local/lib/python3.12/dist-packages (from torch) (11.7.1.2)
-    Requirement already satisfied: nvidia-cusparse-cu12==12.5.4.2 in /usr/local/lib/python3.12/dist-packages (from torch) (12.5.4.2)
-    Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in /usr/local/lib/python3.12/dist-packages (from torch) (0.7.1)
-    Requirement already satisfied: nvidia-nccl-cu12==2.27.5 in /usr/local/lib/python3.12/dist-packages (from torch) (2.27.5)
-    Requirement already satisfied: nvidia-nvshmem-cu12==3.3.20 in /usr/local/lib/python3.12/dist-packages (from torch) (3.3.20)
-    Requirement already satisfied: nvidia-nvtx-cu12==12.6.77 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.77)
-    Requirement already satisfied: nvidia-nvjitlink-cu12==12.6.85 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.85)
-    Requirement already satisfied: nvidia-cufile-cu12==1.11.1.6 in /usr/local/lib/python3.12/dist-packages (from torch) (1.11.1.6)
-    Requirement already satisfied: triton==3.5.0 in /usr/local/lib/python3.12/dist-packages (from torch) (3.5.0)
-    Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.7->matplotlib) (1.17.0)
-    Requirement already satisfied: mpmath<1.4,>=1.1.0 in /usr/local/lib/python3.12/dist-packages (from sympy>=1.13.3->torch) (1.3.0)
-    Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.12/dist-packages (from jinja2->torch) (3.0.3)
-
-
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>Requirement already satisfied: nibabel in /usr/local/lib/python3.12/dist-packages (5.3.3)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.12/dist-packages (3.10.0)
+Requirement already satisfied: numpy in /usr/local/lib/python3.12/dist-packages (2.0.2)
+Requirement already satisfied: torch in /usr/local/lib/python3.12/dist-packages (2.9.0+cu126)
+Requirement already satisfied: packaging&gt;=20 in /usr/local/lib/python3.12/dist-packages (from nibabel) (25.0)
+Requirement already satisfied: typing-extensions&gt;=4.6 in /usr/local/lib/python3.12/dist-packages (from nibabel) (4.15.0)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (1.3.3)
+Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (4.61.1)
+Requirement already satisfied: kiwisolver&gt;=1.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (1.4.9)
+Requirement already satisfied: pillow&gt;=8 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (11.3.0)
+Requirement already satisfied: pyparsing&gt;=2.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (3.2.5)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /usr/local/lib/python3.12/dist-packages (from matplotlib) (2.9.0.post0)
+Requirement already satisfied: filelock in /usr/local/lib/python3.12/dist-packages (from torch) (3.20.0)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.12/dist-packages (from torch) (75.2.0)
+Requirement already satisfied: sympy&gt;=1.13.3 in /usr/local/lib/python3.12/dist-packages (from torch) (1.14.0)
+Requirement already satisfied: networkx&gt;=2.5.1 in /usr/local/lib/python3.12/dist-packages (from torch) (3.6.1)
+Requirement already satisfied: jinja2 in /usr/local/lib/python3.12/dist-packages (from torch) (3.1.6)
+Requirement already satisfied: fsspec&gt;=0.8.5 in /usr/local/lib/python3.12/dist-packages (from torch) (2025.3.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.6.77 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.77)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.6.77 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.77)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.6.80 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.80)
+Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in /usr/local/lib/python3.12/dist-packages (from torch) (9.10.2.21)
+Requirement already satisfied: nvidia-cublas-cu12==12.6.4.1 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.4.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.3.0.4 in /usr/local/lib/python3.12/dist-packages (from torch) (11.3.0.4)
+Requirement already satisfied: nvidia-curand-cu12==10.3.7.77 in /usr/local/lib/python3.12/dist-packages (from torch) (10.3.7.77)
+Requirement already satisfied: nvidia-cusolver-cu12==11.7.1.2 in /usr/local/lib/python3.12/dist-packages (from torch) (11.7.1.2)
+Requirement already satisfied: nvidia-cusparse-cu12==12.5.4.2 in /usr/local/lib/python3.12/dist-packages (from torch) (12.5.4.2)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in /usr/local/lib/python3.12/dist-packages (from torch) (0.7.1)
+Requirement already satisfied: nvidia-nccl-cu12==2.27.5 in /usr/local/lib/python3.12/dist-packages (from torch) (2.27.5)
+Requirement already satisfied: nvidia-nvshmem-cu12==3.3.20 in /usr/local/lib/python3.12/dist-packages (from torch) (3.3.20)
+Requirement already satisfied: nvidia-nvtx-cu12==12.6.77 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.77)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.6.85 in /usr/local/lib/python3.12/dist-packages (from torch) (12.6.85)
+Requirement already satisfied: nvidia-cufile-cu12==1.11.1.6 in /usr/local/lib/python3.12/dist-packages (from torch) (1.11.1.6)
+Requirement already satisfied: triton==3.5.0 in /usr/local/lib/python3.12/dist-packages (from torch) (3.5.0)
+Requirement already satisfied: six&gt;=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.17.0)
+Requirement already satisfied: mpmath&lt;1.4,&gt;=1.1.0 in /usr/local/lib/python3.12/dist-packages (from sympy&gt;=1.13.3-&gt;torch) (1.3.0)
+Requirement already satisfied: MarkupSafe&gt;=2.0 in /usr/local/lib/python3.12/dist-packages (from jinja2-&gt;torch) (3.0.3)
+</code></pre>
+</details>
 
 ```python
 import kagglehub
@@ -66,22 +63,18 @@ path = kagglehub.dataset_download("awsaf49/brats2020-training-data")
 
 print("Path to dataset files:", path)
 ```
-
-    Warning: Looks like you're using an outdated `kagglehub` version (installed: 0.3.13), please consider upgrading to the latest version (0.4.0).
-    Downloading from https://www.kaggle.com/api/v1/datasets/download/awsaf49/brats2020-training-data?dataset_version_number=3...
-
-
-    100%|██████████| 6.76G/6.76G [01:02<00:00, 117MB/s]
-
-    Extracting files...
-
-
-    
-
-
-    Path to dataset files: /root/.cache/kagglehub/datasets/awsaf49/brats2020-training-data/versions/3
-
-
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>Warning: Looks like you're using an outdated `kagglehub` version (installed: 0.3.13), please consider upgrading to the latest version (0.4.0).
+Downloading from https://www.kaggle.com/api/v1/datasets/download/awsaf49/brats2020-training-data?dataset_version_number=3...
+</code></pre>
+<pre><code>100%|██████████| 6.76G/6.76G [01:02&lt;00:00, 117MB/s]</code></pre>
+<pre><code>Extracting files...
+</code></pre>
+<pre><code>
+</code></pre>
+<pre><code>Path to dataset files: /root/.cache/kagglehub/datasets/awsaf49/brats2020-training-data/versions/3
+</code></pre>
+</details>
 
 ```python
 import nibabel as nib
@@ -92,25 +85,23 @@ import glob
 import h5py
 import pandas as pd
 ```
-
-
 ```python
 h5_files = sorted(glob.glob(path + "/**/*.h5", recursive=True))
 print("Total slices:", len(h5_files))
 ```
-
-    Total slices: 57195
-
-
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>Total slices: 57195
+</code></pre>
+</details>
 
 ```python
 trial_file = h5_files[2000]
 print(trial_file)
 ```
-
-    /root/.cache/kagglehub/datasets/awsaf49/brats2020-training-data/versions/3/BraTS2020_training_data/content/data/volume_111_slice_86.h5
-
-
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>/root/.cache/kagglehub/datasets/awsaf49/brats2020-training-data/versions/3/BraTS2020_training_data/content/data/volume_111_slice_86.h5
+</code></pre>
+</details>
 
 ```python
 metadata = pd.read_csv(path + '/BraTS20 Training Metadata.csv')
@@ -149,53 +140,50 @@ plt.show()
 
 
 ```
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>                                          slice_path  target  volume  slice  \
+0  ../input/brats2020-training-data/BraTS2020_tra...       0      41      0   
+1  ../input/brats2020-training-data/BraTS2020_tra...       0      41      1   
+2  ../input/brats2020-training-data/BraTS2020_tra...       0      41      2   
+3  ../input/brats2020-training-data/BraTS2020_tra...       0      41      3   
+4  ../input/brats2020-training-data/BraTS2020_tra...       0      41      4   
 
-                                              slice_path  target  volume  slice  \
-    0  ../input/brats2020-training-data/BraTS2020_tra...       0      41      0   
-    1  ../input/brats2020-training-data/BraTS2020_tra...       0      41      1   
-    2  ../input/brats2020-training-data/BraTS2020_tra...       0      41      2   
-    3  ../input/brats2020-training-data/BraTS2020_tra...       0      41      3   
-    4  ../input/brats2020-training-data/BraTS2020_tra...       0      41      4   
-    
-       label0_pxl_cnt  label1_pxl_cnt  label2_pxl_cnt  background_ratio  
-    0               0               0               0               1.0  
-    1               0               0               0               1.0  
-    2               0               0               0               1.0  
-    3               0               0               0               1.0  
-    4               0               0               0               1.0  
-    slice_path          ../input/brats2020-training-data/BraTS2020_tra...
-    target                                                              1
-    volume                                                            293
-    slice                                                              90
-    label0_pxl_cnt                                                   1892
-    label1_pxl_cnt                                                   3598
-    label2_pxl_cnt                                                    954
-    background_ratio                                             0.888125
-    total                                                            6444
-    Name: 20395, dtype: object
-                                               slice_path  target  volume  slice  \
-    25  ../input/brats2020-training-data/BraTS2020_tra...       1      41     25   
-    26  ../input/brats2020-training-data/BraTS2020_tra...       1      41     26   
-    27  ../input/brats2020-training-data/BraTS2020_tra...       1      41     27   
-    28  ../input/brats2020-training-data/BraTS2020_tra...       1      41     28   
-    29  ../input/brats2020-training-data/BraTS2020_tra...       1      41     29   
-    
-        label0_pxl_cnt  label1_pxl_cnt  label2_pxl_cnt  background_ratio  total  
-    25               0               0               5          0.999913      5  
-    26               3               0              41          0.999236     44  
-    27              63               0              96          0.997240    159  
-    28             127               0             136          0.995434    263  
-    29             183               0             169          0.993889    352  
-    (240, 240, 4)
-    (240, 240, 3)
+   label0_pxl_cnt  label1_pxl_cnt  label2_pxl_cnt  background_ratio  
+0               0               0               0               1.0  
+1               0               0               0               1.0  
+2               0               0               0               1.0  
+3               0               0               0               1.0  
+4               0               0               0               1.0  
+slice_path          ../input/brats2020-training-data/BraTS2020_tra...
+target                                                              1
+volume                                                            293
+slice                                                              90
+label0_pxl_cnt                                                   1892
+label1_pxl_cnt                                                   3598
+label2_pxl_cnt                                                    954
+background_ratio                                             0.888125
+total                                                            6444
+Name: 20395, dtype: object
+                                           slice_path  target  volume  slice  \
+25  ../input/brats2020-training-data/BraTS2020_tra...       1      41     25   
+26  ../input/brats2020-training-data/BraTS2020_tra...       1      41     26   
+27  ../input/brats2020-training-data/BraTS2020_tra...       1      41     27   
+28  ../input/brats2020-training-data/BraTS2020_tra...       1      41     28   
+29  ../input/brats2020-training-data/BraTS2020_tra...       1      41     29   
 
-
-
-    
-![png](output_7_1.png)
-    
+    label0_pxl_cnt  label1_pxl_cnt  label2_pxl_cnt  background_ratio  total  
+25               0               0               5          0.999913      5  
+26               3               0              41          0.999236     44  
+27              63               0              96          0.997240    159  
+28             127               0             136          0.995434    263  
+29             183               0             169          0.993889    352  
+(240, 240, 4)
+(240, 240, 3)
+</code></pre>
+</details>
 
 
+![plot](PINN_Glioblastoma_plot_7_1.png)
 
 ```python
 import h5py
@@ -285,31 +273,27 @@ if best_slice:
 else:
     print("Checked 500 files but found no tumors. Attempting to scan 500 more...")
 ```
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>Step 1: finding all .h5 files...
+Found 57195 total files.
+Step 2: Hunting for a massive tumor directly in the files...
+ &gt; Found candidate! Size: 2857 pixels
+ &gt; Found candidate! Size: 4272 pixels
+ &gt; Found candidate! Size: 4495 pixels
+ &gt; Found candidate! Size: 4819 pixels
+ &gt; Found candidate! Size: 4883 pixels
+ &gt; Found candidate! Size: 6263 pixels
+ &gt; Excellent candidate found. Stopping search.
 
-    Step 1: finding all .h5 files...
-    Found 57195 total files.
-    Step 2: Hunting for a massive tumor directly in the files...
-     > Found candidate! Size: 2857 pixels
-     > Found candidate! Size: 4272 pixels
-     > Found candidate! Size: 4495 pixels
-     > Found candidate! Size: 4819 pixels
-     > Found candidate! Size: 4883 pixels
-     > Found candidate! Size: 6263 pixels
-     > Excellent candidate found. Stopping search.
-    
-    WINNER FOUND: /root/.cache/kagglehub/datasets/awsaf49/brats2020-training-data/versions/3/BraTS2020_training_data/content/data/volume_328_slice_84.h5
-    Tumor Size: 6263 pixels
-
-
-
-    
-![png](output_8_1.png)
-    
+WINNER FOUND: /root/.cache/kagglehub/datasets/awsaf49/brats2020-training-data/versions/3/BraTS2020_training_data/content/data/volume_328_slice_84.h5
+Tumor Size: 6263 pixels
+</code></pre>
+<pre><code>Saved 'best_tumor_slice.npy'. You are ready to train.
+</code></pre>
+</details>
 
 
-    Saved 'best_tumor_slice.npy'. You are ready to train.
-
-
+![plot](PINN_Glioblastoma_plot_8_1.png)
 
 ```python
 import torch
@@ -352,18 +336,15 @@ axes[0].imshow(u_data[0], cmap='magma'); axes[0].set_title("Start (t=0)")
 axes[1].imshow(u_data[-1], cmap='magma'); axes[1].set_title("End (t=1000)")
 plt.show()
 ```
-
-    Using: cuda
-    (240, 240)
-    Ground Truth Data Generated. Shape: (7, 240, 240)
-
-
-
-    
-![png](output_9_1.png)
-    
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>Using: cuda
+(240, 240)
+Ground Truth Data Generated. Shape: (7, 240, 240)
+</code></pre>
+</details>
 
 
+![plot](PINN_Glioblastoma_plot_9_1.png)
 
 ```python
 H, W = u0.shape
@@ -411,12 +392,12 @@ Y_train = torch.tensor(Y_train, dtype=torch.float32).unsqueeze(1).to(device)
 
 print(f"Ready for Training! Total Active Data Points: {len(X_train)}")
 ```
-
-    
-    --- Step 2: Converting to Tensors ---
-    Ready for Training! Total Active Data Points: 66632
-
-
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>
+--- Step 2: Converting to Tensors ---
+Ready for Training! Total Active Data Points: 66632
+</code></pre>
+</details>
 
 ```python
 import torch
@@ -443,19 +424,19 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = TumorPINN().to(device)
 print(model)
 ```
-
-    TumorPINN(
-      (net): Sequential(
-        (0): Linear(in_features=3, out_features=128, bias=True)
-        (1): Tanh()
-        (2): Linear(in_features=128, out_features=128, bias=True)
-        (3): Tanh()
-        (4): Linear(in_features=128, out_features=1, bias=True)
-        (5): Sigmoid()
-      )
-    )
-
-
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>TumorPINN(
+  (net): Sequential(
+    (0): Linear(in_features=3, out_features=128, bias=True)
+    (1): Tanh()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): Tanh()
+    (4): Linear(in_features=128, out_features=1, bias=True)
+    (5): Sigmoid()
+  )
+)
+</code></pre>
+</details>
 
 ```python
 import time
@@ -502,29 +483,26 @@ plt.xlabel("Epoch")
 plt.ylabel("MSE Loss")
 plt.show()
 ```
-
-    
-    --- Starting PINN Training ---
-    Epoch 0 | Loss: 0.191531
-    Epoch 200 | Loss: 0.036958
-    Epoch 400 | Loss: 0.024586
-    Epoch 600 | Loss: 0.020361
-    Epoch 800 | Loss: 0.017386
-    Epoch 1000 | Loss: 0.015553
-    Epoch 1200 | Loss: 0.014382
-    Epoch 1400 | Loss: 0.013497
-    Epoch 1600 | Loss: 0.012690
-    Epoch 1800 | Loss: 0.011920
-    Epoch 2000 | Loss: 0.011044
-    Training finished in 9.6 seconds.
-
-
-
-    
-![png](output_12_1.png)
-    
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>
+--- Starting PINN Training ---
+Epoch 0 | Loss: 0.191531
+Epoch 200 | Loss: 0.036958
+Epoch 400 | Loss: 0.024586
+Epoch 600 | Loss: 0.020361
+Epoch 800 | Loss: 0.017386
+Epoch 1000 | Loss: 0.015553
+Epoch 1200 | Loss: 0.014382
+Epoch 1400 | Loss: 0.013497
+Epoch 1600 | Loss: 0.012690
+Epoch 1800 | Loss: 0.011920
+Epoch 2000 | Loss: 0.011044
+Training finished in 9.6 seconds.
+</code></pre>
+</details>
 
 
+![plot](PINN_Glioblastoma_plot_12_1.png)
 
 ```python
 # 1. Set model to evaluation mode (turns off training-specific randomness)
@@ -567,12 +545,7 @@ plt.suptitle("Validation: Did the AI learn the Physics?")
 plt.show()
 ```
 
-
-    
-![png](output_13_0.png)
-    
-
-
+![plot](PINN_Glioblastoma_plot_13_0.png)
 
 ```python
 import matplotlib.pyplot as plt
@@ -641,16 +614,13 @@ plt.title(f"AI Alignment Map (t=0.5)\nWhere is the model hallucinating?")
 plt.axis('off')
 plt.show()
 ```
-
-    Computing Physics Alignment Map...
-
-
-
-    
-![png](output_14_1.png)
-    
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>Computing Physics Alignment Map...
+</code></pre>
+</details>
 
 
+![plot](PINN_Glioblastoma_plot_14_1.png)
 
 ```python
 def analyze_sensitivity(model, t_val=0.5):
@@ -704,10 +674,10 @@ def analyze_sensitivity(model, t_val=0.5):
 sens = analyze_sensitivity(model)
 print(f"Model Sensitivity to Diffusion Rate (dLoss/dD): {sens:.5e}")
 ```
-
-    Model Sensitivity to Diffusion Rate (dLoss/dD): 2.35739e+02
-
-
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>Model Sensitivity to Diffusion Rate (dLoss/dD): 2.35739e+02
+</code></pre>
+</details>
 
 ```python
 import torch
@@ -809,16 +779,15 @@ ax2.tick_params(axis='y', labelcolor=color)
 plt.title("The Alignment Tax: Accuracy vs. Safety")
 plt.show()
 ```
+<details class="output-wrapper"><summary>▶ View Output</summary>
+<pre><code>Lambda     | Dice (Accuracy) | Physics Error  
+---------------------------------------------
+0.0        | 0.9665          | 0.247496
+0.1        | 0.9581          | 0.025239
+1.0        | 0.9565          | 0.003183
+</code></pre>
+</details>
 
-    Lambda     | Dice (Accuracy) | Physics Error  
-    ---------------------------------------------
-    0.0        | 0.9665          | 0.247496
-    0.1        | 0.9581          | 0.025239
-    1.0        | 0.9565          | 0.003183
 
-
-
-    
-![png](output_16_1.png)
-    
+![plot](PINN_Glioblastoma_plot_16_1.png)
 

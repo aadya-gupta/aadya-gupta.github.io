@@ -67,3 +67,44 @@ details[open] > summary::before {
 pre code, pre span {
   color: #2D2926 !important;
 }
+
+/* Ensure the wrapper is block-level */
+details.output-wrapper {
+  display: block;
+  margin: 1rem 0;
+  border: 1px solid #d1ccc0;
+  border-radius: 6px;
+  background-color: #dcd7ca;
+}
+
+/* Style the clickable summary */
+details.output-wrapper summary {
+  padding: 0.5rem 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #2D2926;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* Add the rotating arrow */
+details.output-wrapper summary::before {
+  content: '▶';
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 0.6rem;
+  transition: transform 0.2s;
+}
+
+details.output-wrapper[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+/* Remove the default pre-tag border inside details */
+details.output-wrapper pre {
+  border: none !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+}
