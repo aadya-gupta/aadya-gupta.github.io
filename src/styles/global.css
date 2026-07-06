@@ -20,18 +20,20 @@
 
 /* Notebook code cell styling */
 pre {
-  background-color: #e8e3d9; /* Slightly darker than paper to create a distinct 'cell' */
-  border: 1px solid #d1ccc0;  /* Subtle border matching your dot-grid color */
+  background-color: #dcd7ca !important; /* Slightly darker than paper for better contrast */
+  border: 1px solid #c8c3b7;
   border-radius: 6px;
   padding: 1rem;
   margin: 1.5rem 0;
   overflow-x: auto;
 }
 
-pre, code {
-  color: #2D2926 !important; /* Force your dark ink color */
-  background-color: #e8e3d9 !important; /* Force your paper background */
+/* Force all text inside code blocks to be dark #2D2926 */
+pre code, pre span {
+  color: #2D2926 !important;
   text-shadow: none !important;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
 }
 
 /* If the output is wrapped in a specific class by nbconvert */
