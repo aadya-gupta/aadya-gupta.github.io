@@ -1,17 +1,12 @@
----
-title: "PINN for Gliostama"
-date: 2026-07-06
-status: "Experiment"
-tags: ["physics-informed", "medical-ai"]
----
-
 # PINN for Glioblastoma
 
 This is a fun exploration I did about Physics Informed Neural Networks.
 
 
+
+
 ```python
-#!pip install nibabel matplotlib numpy torch
+!pip install nibabel matplotlib numpy torch
 ```
 
     Requirement already satisfied: nibabel in /usr/local/lib/python3.12/dist-packages (5.3.3)
@@ -201,7 +196,6 @@ import os
 import glob
 import random
 
-# --- CONFIGURATION ---
 dataset_root = path
 
 print("Step 1: finding all .h5 files...")
@@ -276,7 +270,6 @@ if best_slice:
 
     plt.show()
 
-    # SAVE IT - This is the file you will use for Phase 3
     np.save('best_tumor_slice.npy', u0)
     print("Saved 'best_tumor_slice.npy'. You are ready to train.")
 
@@ -364,11 +357,6 @@ plt.show()
 
 
 ```python
-# ==========================================
-# PART 2: PREPARE DATA FOR PYTORCH
-# ==========================================
-print("\n--- Step 2: Converting to Tensors ---")
-
 H, W = u0.shape
 # Create normalized coordinates (-1 to 1)
 x_coords = np.linspace(-1, 1, W)
@@ -462,18 +450,12 @@ print(model)
 
 ```python
 import time
-
-# --- SETUP ---
-# 1. Initialize the Model
 model = TumorPINN().to(device)
 
-# 2. Define the "Teacher" (Optimizer and Loss Function)
 # Adam is a smart optimizer that adjusts learning speed automatically
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 loss_fn = nn.MSELoss()
 
-# --- THE TRAINING LOOP ---
-print("\n--- Starting PINN Training ---")
 start_time = time.time()
 epochs = 2000 # 2000 iterations is usually enough for 2D physics
 loss_history = []
@@ -503,7 +485,6 @@ for epoch in range(epochs + 1):
 
 print(f"Training finished in {time.time() - start_time:.1f} seconds.")
 
-# --- VISUALIZE LEARNING CURVE ---
 plt.figure(figsize=(6, 4))
 plt.plot(loss_history)
 plt.yscale('log') # Log scale shows the progress better when loss gets tiny
@@ -594,7 +575,6 @@ def compute_physics_residual(model, t_val=0.5):
     Calculates the 'Physics Violation' at every pixel.
     Residual = | du/dt - (D*Laplacian + Reaction) |
     """
-    # 1. Create a Grid that TRACKS GRADIENTS (Crucial!)
     # We create new tensors with requires_grad=True so we can differentiate them
     x = torch.linspace(-1, 1, W, device=device, requires_grad=True)
     y = torch.linspace(-1, 1, H, device=device, requires_grad=True)
@@ -639,7 +619,6 @@ def compute_physics_residual(model, t_val=0.5):
 
     return residual.detach().cpu().numpy().reshape(H, W)
 
-# --- VISUALIZE THE ALIGNMENT MAP ---
 print("Computing Physics Alignment Map...")
 
 # We check at t=0.5 (Mid-growth)
