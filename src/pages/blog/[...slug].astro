@@ -1,19 +1,66 @@
 ---
 import { getCollection, render } from 'astro:content';
-import PostLayout from '../../layouts/PostLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map(entry => ({
-    params: { slug: entry.id },
-    props: { entry },
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
   }));
 }
 
-const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { post } = Astro.props;
+const { Content } = await render(post);
 ---
 
-<PostLayout frontmatter={entry.data}>
-  <Content />
-</PostLayout>
+<BaseLayout title={`${post.data.title} // Aadya Gupta`}>
+  <Nav />
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full overflow-hidden">
+    
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 font-mono text-xs text-neutral-400 mb-6 sm:mb-8">
+      <a href="/blog" class="hover:text-sky-600 transition-colors">← All Dispatches</a>
+      <span>/</span>
+      <span class="text-neutral-600 truncate">{post.data.title}</span>
+    </div>
+
+    <!-- Article Header -->
+    <header class="mb-8 sm:mb-12 border-b border-neutral-200 pb-6 sm:pb-8">
+      <div class="flex flex-wrap items-center gap-2 font-mono text-xs text-neutral-400 mb-3">
+        <span>{new Date(post.data.date ?? post.data.pubDate ?? Date.now()).toISOString().slice(0, 10)}</span>
+        <span>//</span>
+        <span class="text-sky-600 font-medium">{post.data.tags?.[0] ?? "RESEARCH"}</span>
+        {post.data.readingTime && (
+          <>
+            <span>//</span>
+            <span>{post.data.readingTime}</span>
+          </>
+        )}
+      </div>
+
+      <h1 class="font-serif text-2xl sm:text-4xl text-neutral-900 font-normal leading-tight mb-4 break-words">
+        {post.data.title}
+      </h1>
+
+      {post.data.description && (
+        <p class="font-serif text-base sm:text-lg text-neutral-600 leading-relaxed max-w-2xl break-words">
+          {post.data.description}
+        </p>
+      )}
+    </header>
+
+    <!-- Article Prose Container (Math & code will scroll, text wraps safely) -->
+    <article class="prose prose-neutral max-w-none font-serif text-base sm:text-lg leading-relaxed text-neutral-800 break-words min-w-0">
+      <Content />
+    </article>
+
+    <!-- Footer Back Link -->
+    <div class="mt-12 sm:mt-16 pt-6 border-t border-neutral-200 font-mono text-xs text-neutral-500">
+      <a href="/blog" class="hover:text-sky-600 transition-colors">← Return to dispatches index</a>
+    </div>
+
+  </main>
+</BaseLayout>

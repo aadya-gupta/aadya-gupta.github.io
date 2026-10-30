@@ -25,7 +25,7 @@ const featuredExperiment = experiments[0];
 <BaseLayout title="Aadya Gupta">
   <Nav />
 
-  <main class="max-w-5xl mx-auto px-6 py-12 flex-1 w-full space-y-14">
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-1 w-full space-y-10 sm:space-y-14 overflow-hidden">
     
     <!-- 00. PROFILE & ORIENTATION -->
     <section>
@@ -34,17 +34,17 @@ const featuredExperiment = experiments[0];
         <span>Profile & Orientation</span>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         
         <!-- Primary Narrative -->
-        <div class="lg:col-span-8 space-y-4 font-serif text-lg text-neutral-900 leading-relaxed">
+        <div class="lg:col-span-8 space-y-4 font-serif text-base sm:text-lg text-neutral-900 leading-relaxed min-w-0">
           <p>
             I'm <strong class="font-normal text-neutral-950 underline decoration-neutral-300 underline-offset-4">Aadya Gupta</strong>—a researcher investigating deep learning through the lens of <em>mechanistic interpretability</em> and <em>NeuroAI</em>.
           </p>
           <p class="text-neutral-700">
             My work approaches neural networks from a first-principles perspective: mapping the internal representational geometry of small language models, dissecting circuit motifs, and studying how high-dimensional feature manifolds compare against biological computational principles. I care about mathematically grounded questions, empirical rigor, and opening the black box of transformer representations.
           </p>
-          <p class="text-neutral-600 text-base">
+          <p class="text-neutral-600 text-sm sm:text-base">
             Outside research, I explore framing and geometry through photography, crochet custom amigurumi figures, and train compound strength routines.
           </p>
         </div>
@@ -52,20 +52,20 @@ const featuredExperiment = experiments[0];
         <!-- Vital Spec Box -->
         <div 
           style="background-color: #ffffff;" 
-          class="lg:col-span-4 border border-neutral-200 p-5 font-mono text-xs space-y-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+          class="lg:col-span-4 border border-neutral-200 p-4 sm:p-5 font-mono text-xs space-y-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)] w-full min-w-0"
         >
           <div class="flex items-center justify-between text-neutral-400 border-b border-neutral-200 pb-2">
             <span class="tracking-wider uppercase">VITAL SPEC</span>
           </div>
-          <div>
+          <div class="break-words">
             <span class="text-neutral-400 block text-[10px] uppercase tracking-wider">Disciplines</span>
             <span class="text-neutral-900 font-medium">Mech. Interpretability · NeuroAI · Manifold Geometry</span>
           </div>
-          <div>
+          <div class="break-words">
             <span class="text-neutral-400 block text-[10px] uppercase tracking-wider">Core Tooling</span>
             <span class="text-neutral-900">PyTorch, TransformerLens, SAELens, NumPy</span>
           </div>
-          <div>
+          <div class="break-words">
             <span class="text-neutral-400 block text-[10px] uppercase tracking-wider">Offline Focus</span>
             <span class="text-neutral-900">Street Photography & Amigurumi</span>
           </div>
@@ -76,12 +76,11 @@ const featuredExperiment = experiments[0];
         </div>
 
       </div>
-
     </section>
 
     <!-- 01. IN-DEPTH DISPATCHES (BLOG) -->
     <section>
-      <div class="flex items-center justify-between border-b border-neutral-200 pb-2 mb-6">
+      <div class="flex items-center justify-between border-b border-neutral-200 pb-2 mb-4 sm:mb-6">
         <div class="flex items-center gap-2 font-mono text-xs text-neutral-400 tracking-widest uppercase">
           <span class="text-sky-600 font-bold">01.</span>
           <span>In-Depth Dispatches (Blog)</span>
@@ -94,12 +93,12 @@ const featuredExperiment = experiments[0];
       {featuredPost ? (
         <article 
           style="background-color: #ffffff;"
-          class="p-6 md:p-8 border border-neutral-200 hover:border-neutral-300 transition-all shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+          class="p-5 sm:p-8 border border-neutral-200 shadow-[0_1px_3px_rgba(0,0,0,0.02)] min-w-0"
         >
-          <div class="flex flex-wrap items-center gap-2 font-mono text-xs text-neutral-400 mb-3">
+          <div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-neutral-400 mb-3">
             <span>{new Date(featuredPost.data.date ?? featuredPost.data.pubDate ?? Date.now()).toISOString().slice(0, 7).replace('-', '.')}</span>
             <span>//</span>
-            <span class="text-sky-600 font-medium">{featuredPost.data.tags?.[0] ?? "REPRESENTATION_THEORY"}</span>
+            <span class="text-sky-600 font-medium break-all">{featuredPost.data.tags?.[0] ?? "REPRESENTATION_THEORY"}</span>
             {featuredPost.data.readingTime && (
               <>
                 <span>//</span>
@@ -108,13 +107,13 @@ const featuredExperiment = experiments[0];
             )}
           </div>
 
-          <h2 class="font-serif text-2xl font-normal text-neutral-900 mb-3">
+          <h2 class="font-serif text-xl sm:text-2xl font-normal text-neutral-900 mb-3 break-words">
             <a href={`/blog/${featuredPost.id}`} class="hover:text-sky-600 transition-colors">
               {featuredPost.data.title}
             </a>
           </h2>
 
-          <p class="font-serif text-neutral-600 text-base leading-relaxed mb-6 max-w-3xl">
+          <p class="font-serif text-neutral-600 text-sm sm:text-base leading-relaxed mb-6 break-words">
             {featuredPost.data.description}
           </p>
 
@@ -132,7 +131,7 @@ const featuredExperiment = experiments[0];
 
     <!-- 02. LABORATORY NOTEBOOK (LAB) -->
     <section>
-      <div class="flex items-center justify-between border-b border-neutral-200 pb-2 mb-6">
+      <div class="flex items-center justify-between border-b border-neutral-200 pb-2 mb-4 sm:mb-6">
         <div class="flex items-center gap-2 font-mono text-xs text-neutral-400 tracking-widest uppercase">
           <span class="text-sky-600 font-bold">02.</span>
           <span>Laboratory Notebook (Lab)</span>
@@ -145,29 +144,30 @@ const featuredExperiment = experiments[0];
       {featuredExperiment ? (
         <article 
           style="background-color: #ffffff;"
-          class="border border-neutral-200 p-6 md:p-8 font-mono text-xs space-y-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+          class="border border-neutral-200 p-5 sm:p-8 font-mono text-xs space-y-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] min-w-0"
         >
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200 pb-3">
-            <div class="flex items-center gap-2">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-200 pb-3">
+            <div class="flex flex-wrap items-center gap-1.5 break-all">
               <span class="font-bold text-neutral-900">{featuredExperiment.data.id_tag}</span>
               <span class="text-neutral-400">//</span>
-              <span class="text-sky-600 font-medium">{featuredExperiment.data.title.toUpperCase().replace(/\s+/g, ' ')}</span>
+              <span class="text-sky-600 font-medium">{featuredExperiment.data.title.toUpperCase().replace(/\s+/g, '_')}</span>
               <span class="text-neutral-400">[{featuredExperiment.data.category}]</span>
             </div>
-            <div class="flex items-center gap-1.5 text-emerald-700">
+            <div class="text-neutral-700 font-semibold text-xs self-start sm:self-auto shrink-0">
+              STATUS: {featuredExperiment.data.status}
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 font-serif text-sm">
-            <div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 font-serif text-sm">
+            <div class="min-w-0">
               <span class="font-mono text-neutral-400 text-[10px] block uppercase tracking-wider mb-1">Research Question</span>
-              <p class="text-neutral-800 leading-relaxed">
+              <p class="text-neutral-800 leading-relaxed break-words">
                 Do monosemantic latent features extracted by JumpReLU SAEs preserve canonical representational geometry across cross-lingual token embeddings?
               </p>
             </div>
-            <div>
+            <div class="min-w-0">
               <span class="font-mono text-neutral-400 text-[10px] block uppercase tracking-wider mb-1">Empirical Finding</span>
-              <p class="text-neutral-800 leading-relaxed">
+              <p class="text-neutral-800 leading-relaxed break-words">
                 {featuredExperiment.data.metrics ? (
                   <>Attained <strong>{featuredExperiment.data.metrics["Feature Sparsity"] ?? "L0 ≈ 34.2"}</strong> with <strong>{featuredExperiment.data.metrics["Cross-Entropy Recovery"] ?? "98.1%"}</strong> task performance retention.</>
                 ) : (
@@ -177,8 +177,8 @@ const featuredExperiment = experiments[0];
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-neutral-200 text-neutral-400 text-[11px]">
-            <span>Tags: {featuredExperiment.data.stack.join(', ')}</span>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-neutral-200 text-neutral-400 text-[11px]">
+            <span class="break-words">Tags: {featuredExperiment.data.stack.join(', ')}</span>
             <a href="/lab" class="text-sky-600 hover:underline font-mono">
               View lab dossier & chart ↗
             </a>
