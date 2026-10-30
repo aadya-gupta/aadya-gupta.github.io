@@ -20,7 +20,6 @@ const lab = defineCollection({
     id_tag: z.string().default("EXP_00"),
     title: z.string(),
     category: z.string().default("EXPERIMENT"),
-    status: z.string().default("VERIFIED"),
     date: z.coerce.date().default(() => new Date()),
     stack: z.array(z.string()).default([]),
     metrics: z.record(z.string(), z.string()).optional(),
