@@ -1,77 +1,88 @@
-import nbformat
 import os
-import base64
+import glob
+from pathlib import Path
+import rawpy
+from PIL import Image
+import exifread
 
-def convert_notebook(notebook_path, output_dir):
-    with open(notebook_path, 'r', encoding='utf-8') as f:
-        nb = nbformat.read(f, as_version=4)
+INPUT_DIR = Path("./raw_photos")
+OUTPUT_IMG_DIR = Path("./public/photos")
+CONTENT_DIR = Path("./src/content/photos")
 
-    md_content = []
-    frontmatter = ""
+OUTPUT_IMG_DIR.mkdir(parents=True, exist_ok=True)
+CONTENT_DIR.mkdir(parents=True, exist_ok=True)
 
-    for idx, cell in enumerate(nb.cells):
-        # 1. Grab Frontmatter
-        if idx == 0 and cell.cell_type == 'markdown' and cell.source.strip().startswith('---'):
-            frontmatter = cell.source + "\n\n"
-            continue
-        
-        # 2. Markdown cells
-        if cell.cell_type == 'markdown':
-            md_content.append(cell.source + "\n\n")
-        
-        # 3. Process Code Cells
-        elif cell.cell_type == 'code':
-            md_content.append(f"```python\n{cell.source}\n```\n")
-            
-            if cell.outputs:
-                text_outputs = []
-                image_outputs = []
-                
-                # Separate text logs from image plots
-                for o_idx, out in enumerate(cell.outputs):
-                    if out.output_type == 'stream':
-                        text = out.text.replace('<', '&lt;').replace('>', '&gt;')
-                        text_outputs.append(f"<pre><code>{text}</code></pre>\n")
-                    
-                    elif out.output_type in ['execute_result', 'display_data']:
-                        if 'image/png' in out.data:
-                            img_data = out.data['image/png']
-                            base_name = os.path.basename(notebook_path).replace('.ipynb', '')
-                            img_filename = f"{base_name}_plot_{idx}_{o_idx}.png"
-                            img_path = os.path.join(output_dir, img_filename)
-                            
-                            with open(img_path, 'wb') as img_f:
-                                img_f.write(base64.b64decode(img_data))
-                            
-                            # Add to image list instead of text list
-                            image_outputs.append(f"\n![plot]({img_filename})\n\n")
-                        
-                        elif 'text/plain' in out.data:
-                            text = out.data['text/plain'].replace('<', '&lt;').replace('>', '&gt;')
-                            text_outputs.append(f"<pre><code>{text}</code></pre>\n")
-                    
-                    elif out.output_type == 'error':
-                        text_outputs.append(f"<pre><code style='color:#d9534f;'>{out.ename}: {out.evalue}</code></pre>\n")
-                
-                # Wrap ONLY the text logs in the dropdown
-                if text_outputs:
-                    md_content.append('<details class="output-wrapper"><summary>▶ View Output</summary>\n')
-                    md_content.extend(text_outputs)
-                    md_content.append('</details>\n\n')
-                
-                # Append the images completely outside the dropdown
-                if image_outputs:
-                    md_content.extend(image_outputs)
+def parse_exif(file_path):
+    with open(file_path, 'rb') as f:
+        tags = exifread.process_file(f, details=False)
 
-    # 4. Assemble and Save
-    final_md = frontmatter + "".join(md_content)
-    
-    filename = os.path.basename(notebook_path).replace('.ipynb', '.md')
-    out_path = os.path.join(output_dir, filename)
-    with open(out_path, 'w', encoding='utf-8') as f:
-        f.write(final_md)
-    
-    print(f"Successfully constructed perfect HTML for: {filename}")
+    shutter = str(tags.get('EXIF ExposureTime', '1/250s'))
+    aperture = f"ƒ/{float(tags.get('EXIF FNumber', 2.8).values[0]):.1f}" if 'EXIF FNumber' in tags else "ƒ/2.8"
+    iso = f"ISO {tags.get('EXIF ISOSpeedRatings', '100')}"
+    focal = f"{tags.get('EXIF FocalLength', '35')}mm"
+    lens = str(tags.get('EXIF LensModel', 'Sony E-Mount Lens')).strip()
+
+    return {
+        "shutter": shutter,
+        "aperture": aperture,
+        "iso": iso,
+        "focal": focal,
+        "lens": lens,
+    }
+
+def convert_arw():
+    arw_files = list(INPUT_DIR.glob("*.ARW")) + list(INPUT_DIR.glob("*.arw"))
+    if not arw_files:
+        print(f"No .ARW files found in {INPUT_DIR}. Create the folder and drop some files there!")
+        return
+
+    print(f"Found {len(arw_files)} ARW file(s). Processing...")
+
+    for arw_path in arw_files:
+        stem = arw_path.stem
+        out_img_path = OUTPUT_IMG_DIR / f"{stem}.webp"
+        md_path = CONTENT_DIR / f"{stem}.md"
+
+        print(f"→ Processing: {arw_path.name}")
+
+        # 1. Extract real EXIF metadata from the RAW file
+        meta = parse_exif(arw_path)
+
+        # 2. Develop the RAW sensor image into web-ready WebP
+        if not out_img_path.exists():
+            with rawpy.imread(str(arw_path)) as raw:
+                rgb = raw.postprocess(
+                    use_camera_wb=True,
+                    half_size=False,
+                    no_auto_bright=True,
+                    output_bps=8
+                )
+            img = Image.fromarray(rgb)
+            img.thumbnail((2000, 2000), Image.Resampling.LANCZOS)
+            img.save(out_img_path, format="WEBP", quality=88)
+            print(f"   ✓ Developed image: {out_img_path}")
+
+        # 3. Create or update Markdown entry for Astro
+        if not md_path.exists():
+            clean_title = stem.replace("-", " ").replace("_", " ").title()
+            frontmatter = f"""---
+title: "{clean_title}"
+caption: "Optical capture with Sony ZV-E10."
+image: "/photos/{stem}.webp"
+date: 2026-04-20
+camera: "Sony ZV-E10"
+lens: "{meta['lens']}"
+focal_length: "{meta['focal']}"
+aperture: "{meta['aperture']}"
+shutter: "{meta['shutter']}"
+iso: "{meta['iso']}"
+---
+"""
+            with open(md_path, "w") as f:
+                f.write(frontmatter)
+            print(f"   ✓ Created markdown: {md_path}")
+
+    print("\nAll ARW files processed! Check your photography page.")
 
 if __name__ == "__main__":
-    convert_notebook('notebooks/PINN_Glioblastoma.ipynb', 'src/content/lab/')
+    convert_arw()

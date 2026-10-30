@@ -1,32 +1,206 @@
 ---
-import Layout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
 
-// Fetch all photo folders automatically
-const allPhotos = await getCollection('photos');
+const photoEntries = (await getCollection('photos')).sort(
+  (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
+);
 ---
 
-<Layout title="Photography | Aadya">
-  <main class="max-w-4xl mx-auto px-6 py-12">
-    <h1 class="text-3xl font-bold mb-10 border-b pb-4 border-[#d1ccc0]">Photography</h1>
+<BaseLayout title="Optical Archive // Aadya Gupta">
+  <Nav />
+
+  <main class="max-w-6xl mx-auto px-6 py-12 flex-1 w-full">
     
+    <!-- Page Header -->
+    <section class="mb-12 border-b border-neutral-200 pb-8">
+      <div class="flex items-center gap-2 font-mono text-xs text-neutral-400 tracking-widest uppercase mb-3">
+        <span class="text-sky-600 font-bold">03.</span>
+        <span>Visual Studies & Light Captures</span>
+      </div>
+      <h1 class="font-serif text-3xl text-neutral-900 font-normal mb-3">Optical Archive</h1>
+      <p class="font-serif text-neutral-600 text-base max-w-2xl leading-relaxed">
+        Studies in architecture, street geometry, and light. Click any plate to inspect raw telemetry.
+      </p>
+    </section>
+
+    <!-- Photo Gallery Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-      {allPhotos.map(async (photo) => {
-        const { Content } = await photo.render();
+      {photoEntries.map((entry) => {
+        const { data } = entry;
+        const dateStr = new Date(data.date).toISOString().slice(0, 7).replace("-", ".");
+        
         return (
-          <div class="flex flex-col">
-            <Image 
-              src={photo.data.cover} 
-              alt={photo.data.alt} 
-              class="w-full h-auto object-cover rounded-md border border-[#d1ccc0] shadow-sm mb-4"
-            />
-            <div class="text-sm italic opacity-80 font-['Courier_New']">
-              <Content />
+          <article 
+            style="background-color: #ffffff;"
+            class="border border-neutral-200 p-4 md:p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all hover:border-neutral-300 flex flex-col justify-between"
+          >
+            <!-- Clickable Image Frame -->
+            <button
+              type="button"
+              class="photo-trigger overflow-hidden bg-neutral-100 border border-neutral-200 mb-4 cursor-zoom-in text-left group block w-full relative"
+              data-src={data.image}
+              data-title={data.title}
+              data-caption={data.caption ?? ""}
+              data-camera={data.camera ?? "Sony ZV-E10"}
+              data-lens={data.lens ?? "Prime Lens"}
+              data-exposure={`${data.aperture ?? ""} · ${data.shutter ?? ""}`}
+              data-iso={data.iso ?? ""}
+              data-location={data.location ?? ""}
+            >
+              <img 
+                src={data.image} 
+                alt={data.title}
+                class="w-full h-[320px] md:h-[380px] object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                loading="lazy"
+              />
+              <span class="absolute bottom-2 right-2 px-2 py-1 bg-neutral-900/80 text-white font-mono text-[9px] uppercase tracking-wider backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                [ Inspect Plate ↗ ]
+              </span>
+            </button>
+
+            <!-- Metadata & Title -->
+            <div class="space-y-3 font-mono text-xs">
+              <div class="flex items-center justify-between border-b border-neutral-200 pb-2">
+                <span class="font-serif text-lg font-normal text-neutral-900">{data.title}</span>
+                <span class="text-neutral-400 text-[11px]">{dateStr}</span>
+              </div>
+
+              {data.caption && (
+                <p class="font-serif text-neutral-600 text-sm italic font-normal leading-relaxed">
+                  {data.caption}
+                </p>
+              )}
+
+              <!-- EXIF Telemetry Strip -->
+              <div class="pt-2 border-t border-neutral-100 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] text-neutral-500">
+                <div>
+                  <span class="text-neutral-400 block uppercase">Body</span>
+                  <span class="text-neutral-700">{data.camera}</span>
+                </div>
+                {data.lens && (
+                  <div>
+                    <span class="text-neutral-400 block uppercase">Lens</span>
+                    <span class="text-neutral-700 truncate block">{data.lens}</span>
+                  </div>
+                )}
+                {data.aperture && (
+                  <div>
+                    <span class="text-neutral-400 block uppercase">Exposure</span>
+                    <span class="text-neutral-700">{data.aperture} · {data.shutter}</span>
+                  </div>
+                )}
+                {data.iso && (
+                  <div>
+                    <span class="text-neutral-400 block uppercase">Sensitivity</span>
+                    <span class="text-neutral-700">{data.iso}</span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )
+          </article>
+        );
       })}
     </div>
+
   </main>
-</Layout>
+
+  <!-- Technical Telemetry Lightbox Modal -->
+  <dialog 
+    id="photo-dialog" 
+    class="backdrop:bg-neutral-950/85 backdrop:backdrop-blur-sm bg-transparent p-4 sm:p-8 max-w-5xl w-full max-h-[92vh] text-neutral-900 outline-none"
+  >
+    <div style="background-color: #ffffff;" class="border border-neutral-200 p-4 sm:p-6 shadow-2xl flex flex-col gap-4">
+      
+      <!-- Top Modal Bar -->
+      <div class="flex items-center justify-between border-b border-neutral-200 pb-3 font-mono text-xs">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-sky-600"></span>
+          <span id="modal-title" class="font-semibold text-neutral-900">PLATE INSPECT</span>
+        </div>
+        <button 
+          id="modal-close" 
+          type="button"
+          class="text-neutral-400 hover:text-neutral-900 uppercase tracking-widest text-[11px] font-mono px-2 py-1 border border-neutral-200 hover:border-neutral-400"
+        >
+          [ Esc / Close ]
+        </button>
+      </div>
+
+      <!-- Image Area -->
+      <div class="flex items-center justify-center bg-neutral-900 border border-neutral-200 max-h-[62vh] overflow-hidden">
+        <img 
+          id="modal-image" 
+          src="" 
+          alt="" 
+          class="max-h-[62vh] w-auto max-w-full object-contain mx-auto"
+        />
+      </div>
+
+      <!-- Expanded EXIF Telemetry Box -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-neutral-50 p-3 border border-neutral-200 font-mono text-xs">
+        <div>
+          <span class="text-neutral-400 block text-[10px] uppercase">Body</span>
+          <span id="modal-camera" class="font-semibold text-neutral-800">--</span>
+        </div>
+        <div>
+          <span class="text-neutral-400 block text-[10px] uppercase">Lens</span>
+          <span id="modal-lens" class="font-semibold text-neutral-800 truncate block">--</span>
+        </div>
+        <div>
+          <span class="text-neutral-400 block text-[10px] uppercase">Exposure</span>
+          <span id="modal-exposure" class="font-semibold text-neutral-800">--</span>
+        </div>
+        <div>
+          <span class="text-neutral-400 block text-[10px] uppercase">Sensitivity</span>
+          <span id="modal-iso" class="font-semibold text-neutral-800">--</span>
+        </div>
+      </div>
+
+      <p id="modal-caption" class="font-serif text-sm italic text-neutral-600"></p>
+    </div>
+  </dialog>
+</BaseLayout>
+
+<script>
+  const dialog = document.getElementById('photo-dialog') as HTMLDialogElement;
+  const modalImg = document.getElementById('modal-image') as HTMLImageElement;
+  const modalTitle = document.getElementById('modal-title')!;
+  const modalCaption = document.getElementById('modal-caption')!;
+  const modalCamera = document.getElementById('modal-camera')!;
+  const modalLens = document.getElementById('modal-lens')!;
+  const modalExposure = document.getElementById('modal-exposure')!;
+  const modalIso = document.getElementById('modal-iso')!;
+  const closeBtn = document.getElementById('modal-close')!;
+
+  document.querySelectorAll('.photo-trigger').forEach((button) => {
+    button.addEventListener('click', () => {
+      const el = button as HTMLElement;
+      modalImg.src = el.dataset.src || '';
+      modalTitle.textContent = el.dataset.title || 'PLATE INSPECT';
+      modalCaption.textContent = el.dataset.caption || '';
+      modalCamera.textContent = el.dataset.camera || '--';
+      modalLens.textContent = el.dataset.lens || '--';
+      modalExposure.textContent = el.dataset.exposure || '--';
+      modalIso.textContent = el.dataset.iso || '--';
+
+      dialog.showModal();
+    });
+  });
+
+  closeBtn.addEventListener('click', () => dialog.close());
+
+  dialog.addEventListener('click', (e) => {
+    const rect = dialog.getBoundingClientRect();
+    const isInDialog = (
+      rect.top <= e.clientY &&
+      e.clientY <= rect.top + rect.height &&
+      rect.left <= e.clientX &&
+      e.clientX <= rect.left + rect.width
+    );
+    if (!isInDialog) {
+      dialog.close();
+    }
+  });
+</script>

@@ -1,28 +1,76 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
 
-// This fetches everything in your src/content/blog/ folder
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+// Fetch collection
+const rawPosts = await getCollection('blog');
+
+// Safe sort that checks both .date and .pubDate
+const posts = rawPosts.sort((a, b) => {
+  const dateA = new Date(a.data.date ?? a.data.pubDate ?? 0).valueOf();
+  const dateB = new Date(b.data.date ?? b.data.pubDate ?? 0).valueOf();
+  return dateB - dateA;
+});
 ---
 
-<BaseLayout title="Blog" activePage="blog">
-  <div class="dot-grid p-8">
-    <h1 class="text-2xl font-bold mb-8">Blog</h1>
-    
-    <ul class="space-y-6">
-      {posts.map((post) => (
-        <li class="border-b border-ink/20 pb-4">
-          <a href={`/blog/${post.id}`} class="text-lg hover:underline">
-            {post.data.title}
-          </a>
-          <div class="text-sm opacity-70 mt-1">
-            {post.data.date.toLocaleDateString()}
+<BaseLayout title="Dispatches // Aadya Gupta">
+  <Nav />
+
+  <main class="max-w-5xl mx-auto px-6 py-12 flex-1 w-full">
+    <!-- Header -->
+    <section class="mb-12 border-b border-gray-200 pb-8">
+      <div class="flex items-center gap-2 font-mono text-xs text-gray-400 tracking-widest uppercase mb-3">
+        <span class="text-sky-600 font-bold">01.</span>
+        <span>Dispatches & Longform Papers</span>
+      </div>
+      <h1 class="font-serif text-3xl text-gray-900 font-normal mb-3">Writing & Research Notes</h1>
+      <p class="font-serif text-gray-600 text-base max-w-2xl leading-relaxed">
+        Deep investigations into representation dynamics, machine learning systems, hardware kernel performance, and theory.
+      </p>
+    </section>
+
+    <!-- Post Index List -->
+    <div class="space-y-6">
+      {posts.map((post) => {
+      const postDate = post.data.date ?? post.data.pubDate ?? new Date();
+      const dateStr = new Date(postDate).toISOString().slice(0, 7).replace("-", ".");
+      const postSlug = post.slug ?? post.id.replace(/\.[^/.]+$/, "");
+
+      return (
+        <article 
+          style="background-color: #ffffff;"
+          class="p-6 border border-neutral-200 hover:border-neutral-300 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)] mb-6"
+        >
+          <div class="flex flex-wrap items-center gap-2 font-mono text-xs text-neutral-400 mb-2">
+            <span>{dateStr}</span>
+            <span>//</span>
+            <span class="text-sky-600 font-medium">{post.data.tags?.[0] ?? "THEORY"}</span>
+            {post.data.readingTime && (
+              <>
+                <span>//</span>
+                <span>{post.data.readingTime}</span>
+              </>
+            )}
           </div>
-        </li>
-      ))}
-    </ul>
-  </div>
+
+          <h2 class="font-serif text-xl text-neutral-900 font-normal mb-2">
+            <a href={`/blog/${post.id}`} class="hover:text-sky-600 transition-colors">
+              {post.data.title}
+            </a>
+          </h2>
+
+          <p class="font-serif text-neutral-600 text-base leading-relaxed mb-4">
+            {post.data.description}
+          </p>
+
+          <a href={`/blog/${postSlug}`} class="inline-flex items-center gap-1.5 font-mono text-xs text-sky-600 hover:underline">
+            <span>Read dispatch</span>
+            <span>→</span>
+          </a>
+        </article>
+      );
+    })}
+    </div>
+  </main>
 </BaseLayout>

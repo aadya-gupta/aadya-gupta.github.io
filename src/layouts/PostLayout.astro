@@ -1,0 +1,131 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+
+const { frontmatter } = Astro.props;
+const formattedDate = new Date(frontmatter.date ?? frontmatter.pubDate ?? Date.now()).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+});
+---
+
+<BaseLayout title={`${frontmatter.title} // Aadya Gupta`}>
+  <Nav />
+
+  <!-- Main Grid: Left Navigation Rail + Reading Pane with Right Gutter -->
+  <div class="max-w-6xl mx-auto px-6 py-12 flex-1 w-full grid grid-cols-1 lg:grid-cols-[160px_1fr] gap-10">
+    
+    <!-- LEFT RAIL (Sticky metadata & back link) -->
+    <aside class="hidden lg:block font-mono text-xs text-neutral-400 sticky top-24 self-start space-y-6">
+      <div>
+        <span class="text-sky-600 block text-[10px] tracking-widest uppercase mb-1">DISPATCH</span>
+        <span class="text-neutral-700 font-semibold">DOC // 01</span>
+      </div>
+
+      <nav class="space-y-2 border-t border-neutral-200 pt-4">
+        <a href="/blog" class="text-sky-600 hover:underline block">← All Dispatches</a>
+        <a href="#top" class="text-neutral-400 hover:text-neutral-900 block">↑ Top</a>
+      </nav>
+    </aside>
+
+    <!-- RIGHT MAIN: Reading Column with Floating Margins -->
+    <main class="w-full">
+      
+      <!-- Article Header -->
+      <header class="max-w-[640px] mb-10 border-b border-neutral-200 pb-8">
+        <div class="flex flex-wrap items-center gap-2 font-mono text-xs text-neutral-400 uppercase tracking-wider mb-4">
+          <span>{formattedDate}</span>
+          <span>//</span>
+          <span class="text-sky-600 font-medium">{frontmatter.tags?.[0] ?? "DISPATCH"}</span>
+          {frontmatter.readingTime && (
+            <>
+              <span>//</span>
+              <span>{frontmatter.readingTime}</span>
+            </>
+          )}
+        </div>
+
+        <h1 class="font-serif text-3xl sm:text-4xl font-normal text-neutral-900 leading-tight mb-4">
+          {frontmatter.title}
+        </h1>
+
+        <p class="font-serif text-lg text-neutral-600 italic leading-relaxed">
+          {frontmatter.description}
+        </p>
+      </header>
+
+      <!-- Markdown Reading Body (640px wide to leave room for right floats) -->
+      <article class="distill-prose max-w-[640px] relative font-serif text-neutral-900 text-lg leading-relaxed space-y-6">
+        <slot />
+      </article>
+
+      <!-- Bottom Navigation for mobile -->
+      <footer class="max-w-[640px] mt-16 pt-8 border-t border-neutral-200 lg:hidden font-mono text-xs flex justify-between">
+        <a href="/blog" class="text-sky-600 hover:underline">← All Dispatches</a>
+        <a href="#top" class="text-neutral-400">↑ Top</a>
+      </footer>
+
+    </main>
+
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* Sidenote Container */
+  .sidenote {
+    display: block;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: #4b5563;
+    background-color: #ffffff;
+    border-left: 2px solid #0284c7;
+    padding: 0.75rem 1rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Desktop Margin Float: Pushes it cleanly into the right gutter */
+  @media (min-width: 1024px) {
+    .sidenote {
+      float: right;
+      clear: right;
+      margin-right: -18rem;
+      width: 15rem;
+      margin-top: 0.25rem;
+      margin-bottom: 1.5rem;
+      border-left: 1px solid #d1d5db;
+      box-shadow: none;
+      padding: 0 0 0 0.85rem;
+      background: transparent;
+    }
+  }
+
+  .sidenote-label {
+    display: block;
+    color: #111827;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.35rem;
+  }
+
+  /* Distill Full-Bleed Breakout Figure */
+  .breakout-figure {
+    position: relative;
+    width: 100%;
+    margin: 2.5rem 0;
+    padding: 1.25rem;
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  }
+
+  @media (min-width: 1024px) {
+    .breakout-figure {
+      width: calc(100% + 18rem); /* Breaks out into the right margin track */
+    }
+  }
+</style>

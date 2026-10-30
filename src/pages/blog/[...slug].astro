@@ -1,27 +1,19 @@
 ---
 import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map(post => ({
-    params: { slug: post.id }, props: { post },
+  return posts.map(entry => ({
+    params: { slug: entry.id },
+    props: { entry },
   }));
 }
 
-const { post } = Astro.props;
-const { Content } = await render(post);
+const { entry } = Astro.props;
+const { Content } = await render(entry);
 ---
 
-<!-- Changed 'entry' to 'post' below -->
-<BaseLayout title={post.data.title} activePage="blog">
-  <a href="/blog" class="inline-block mb-8 text-sm opacity-60 hover:opacity-100 transition-opacity">
-    ← Back to Blog
-  </a>
-
-  <article class="prose max-w-none">
-    <!-- Changed 'entry' to 'post' below -->
-    <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
-    <Content />
-  </article>
-</BaseLayout>
+<PostLayout frontmatter={entry.data}>
+  <Content />
+</PostLayout>

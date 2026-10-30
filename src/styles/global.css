@@ -1,110 +1,142 @@
+/* 1. Google Fonts: Lora + IBM Plex Mono */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+/* 2. Tailwind Engine */
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
+/* 3. Theme Configuration Tokens */
+@theme {
+  --color-canvas: #FAFAFA;
+  --color-surface: #FFFFFF;
+  --color-ink: #111827;
+  --color-ink-muted: #6B7280;
+  --color-ink-faint: #9CA3AF;
+  --color-border-subtle: #E5E7EB;
+  --color-border-line: #D1D5DB;
+  --color-signal-blue: #0284C7;
+  --color-signal-green: #059669;
+
+  --font-serif: "Lora", Georgia, serif;
+  --font-mono: "IBM Plex Mono", Menlo, monospace;
+}
+
+/* 4. Base Document Defaults */
 @layer base {
+  html {
+    background-color: #FAFAFA;
+    color: #111827;
+  }
+  
   body {
-    background-color: #F4EFE6;
-    color: #2D2926;
-    font-family: 'Courier Prime', monospace;
+    background-color: #FAFAFA;
+    color: #111827;
+    font-family: var(--font-serif);
   }
 }
 
+/* 5. Precision Engineering Grid Utility */
 @layer utilities {
-  .dot-grid {
-    background-image: radial-gradient(#d1ccc0 1px, transparent 1px);
-    background-size: 20px 20px;
+  .bg-lab-grid {
+    background-color: #FAFAFA;
+    background-image: 
+      linear-gradient(to right, rgba(209, 213, 219, 0.35) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(209, 213, 219, 0.35) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 }
 
-/* Base Pre/Code Styles */
+/* 6. Scientific Code & Terminal Blocks (Clean Alabaster/Slate) */
 pre {
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 1rem;
   margin: 1.5rem 0;
   overflow-x: auto;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  color: #2D2926 !important;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  color: #111827 !important;
 }
 
-/* Code Input Cells */
+/* Code Input Cells (Jupyter/Lab style) */
 .input pre, pre.astro-code {
-  background-color: #e8e3d9 !important;
-  border: 1px solid #d1ccc0 !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
 }
 
 /* Output Cells */
 .output pre, pre:not(.astro-code) {
-  background-color: #dcd7ca !important;
-  border: 1px solid #c8c3b7 !important;
-  border-left: 5px solid #8e8a7f !important;
+  background-color: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  border-left: 3px solid #0284C7 !important; /* Scientific blue signal */
 }
 
-/* Collapsible Dropdown Styles */
-summary {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #d1ccc0;
-}
-
-summary::before {
-  content: '▶';
-  display: inline-block;
-  margin-right: 0.5rem;
-  font-size: 0.7rem;
-  transition: transform 0.2s;
-}
-
-details[open] > summary::before {
-  transform: rotate(90deg);
-}
-
-/* Ensure readability */
-pre code, pre span {
-  color: #2D2926 !important;
-}
-
-/* Ensure the wrapper is block-level */
+/* Collapsible Dropdown / Output Cell Wrapper */
 details.output-wrapper {
   display: block;
   margin: 1rem 0;
-  border: 1px solid #d1ccc0;
-  border-radius: 6px;
-  background-color: #dcd7ca;
+  border: 1px solid #E5E7EB;
+  border-radius: 4px;
+  background-color: #F8FAFC;
 }
 
-/* Style the clickable summary */
 details.output-wrapper summary {
   padding: 0.5rem 1rem;
-  font-family: 'Courier New', monospace;
-  font-size: 0.8rem;
-  color: #2D2926;
-  font-weight: bold;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #4B5563;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid #E5E7EB;
+  list-style: none;
 }
 
-/* Add the rotating arrow */
 details.output-wrapper summary::before {
   content: '▶';
   display: inline-block;
   margin-right: 0.5rem;
   font-size: 0.6rem;
-  transition: transform 0.2s;
+  color: #9CA3AF;
+  transition: transform 0.2s ease;
 }
 
 details.output-wrapper[open] > summary::before {
   transform: rotate(90deg);
+  color: #0284C7;
 }
 
-/* Remove the default pre-tag border inside details */
 details.output-wrapper pre {
   border: none !important;
   background-color: transparent !important;
   margin: 0 !important;
+}
+
+/* 7. Precision Link Styling */
+.bio-link {
+  text-decoration: underline;
+  text-decoration-color: #D1D5DB;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  color: #111827;
+  transition: all 0.15s ease-in-out;
+}
+
+.bio-link:hover {
+  text-decoration-color: #0284C7;
+  color: #0284C7;
+}
+
+/* Style subheaders inside Lab dossiers */
+.lab-content h3 {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-top: 1.5rem;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
 }

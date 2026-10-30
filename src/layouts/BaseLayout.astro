@@ -1,69 +1,42 @@
 ---
+// Import global.css here so Tailwind styles apply to every page!
 import '../styles/global.css';
-const { title, activePage } = Astro.props;
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = "Aadya Gupta // Research & Systems", 
+  description = "Personal research terminal, technical dispatches, and experiments." 
+} = Astro.props;
 ---
-<html lang="en">
+
+<!doctype html>
+<html lang="en" class="bg-canvas text-ink antialiased selection:bg-neutral-200">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{title ? `${title} | Aadya` : 'Aadya'}</title>
+
+    <!-- Google Fonts: Lora + IBM Plex Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link 
+      rel="stylesheet" 
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" 
+      integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" 
+      crossorigin="anonymous"
+    />
   </head>
-  <body class="bg-paper text-ink min-h-screen font-mono py-8 md:py-12">
-    <div class="px-4 md:px-12 relative">
-      
-      <header class="flex justify-between items-start mb-12 md:mb-16 relative z-50">
-        
-        <div class="relative">
-          <button id="menu-toggle" class="p-2 -ml-2 rounded hover:opacity-60 transition-opacity cursor-pointer" aria-label="Toggle Menu">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
-
-          <nav id="mobile-menu" class="hidden absolute top-12 left-0 bg-paper border border-[#d1ccc0] shadow-sm rounded-md p-6 min-w-[200px] z-50">
-            <ul class="flex flex-col space-y-4 text-base md:text-lg">
-              <li><a href="/" class={`hover:opacity-60 transition-opacity ${activePage === 'home' ? 'font-bold' : ''}`}>Home</a></li>
-              <li><a href="/lab" class={`hover:opacity-60 transition-opacity ${activePage === 'lab' ? 'font-bold' : ''}`}>Lab</a></li>
-              <li><a href="/blog" class={`hover:opacity-60 transition-opacity ${activePage === 'blog' ? 'font-bold' : ''}`}>Blog</a></li>
-              <li><a href="/photography" class={`hover:opacity-60 transition-opacity ${activePage === 'photography' ? 'font-bold' : ''}`}>Photography</a></li>
-            </ul>
-          </nav>
-        </div>
-
-        <nav class="hidden md:flex flex-wrap justify-end gap-x-6 gap-y-2 text-base md:text-lg pt-2 w-full">
-          {activePage !== 'home' && <a href="/" class="hover:opacity-60 transition-opacity">Home</a>}
-          {activePage !== 'blog' && <a href="/blog" class="hover:opacity-60 transition-opacity">Blog</a>}
-          {activePage !== 'lab' && <a href="/lab" class="hover:opacity-60 transition-opacity">Lab</a>}
-          <a href="/cv.pdf" target="_blank" class="hover:opacity-60 transition-opacity">CV</a>
-          <a href="https://github.com/aadya-gupta" target="_blank" class="hover:opacity-60 transition-opacity">Github</a>
-        </nav>
-
-      </header>
-      
-      <main class="max-w-4xl mx-auto w-full">
-        <slot />
-      </main>
-    </div>
-
-    <script>
-      const toggle = document.getElementById('menu-toggle');
-      const menu = document.getElementById('mobile-menu');
-
-      if (toggle && menu) {
-        toggle.addEventListener('click', (event) => {
-          event.stopPropagation();
-          menu.classList.toggle('hidden');
-        });
-
-        document.addEventListener('click', (event) => {
-          if (!menu.contains(event.target as Node)) {
-            menu.classList.add('hidden');
-          }
-        });
-      }
-    </script>
+  <body class="min-h-screen flex flex-col font-serif bg-lab-grid text-ink selection:bg-neutral-200">
+    <slot />
   </body>
 </html>

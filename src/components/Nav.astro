@@ -1,0 +1,62 @@
+---
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.replace(/\/$/, "");
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+  { href: "/lab", label: "Lab" },
+  { href: "/photography", label: "Photography" },
+];
+
+const externalLinks = [
+  { href: "/cv.pdf", label: "CV ↗" }, // Replace with your actual CV link or /cv
+  { href: "https://github.com/aadya-gupta", label: "GitHub ↗" },
+];
+---
+
+<header class="border-b border-border-subtle bg-canvas/80 backdrop-blur-sm sticky top-0 z-40 transition-colors">
+  <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between font-mono text-xs">
+    
+    <!-- Identity Brand -->
+    <a href="/" class="flex items-center gap-2 text-ink hover:text-signal-blue transition-colors">
+      <span class="inline-block w-2 h-2 rounded-full bg-signal-green"></span>
+      <span class="font-semibold tracking-wider">AADYA GUPTA</span>
+      <span class="text-ink-faint hidden sm:inline">// AG-26</span>
+    </a>
+
+    <!-- Navigation Links -->
+    <nav class="flex items-center gap-4 sm:gap-6">
+      {links.map((link) => {
+        const isActive = currentPath === link.href.replace(/\/$/, "");
+        return (
+          <a
+            href={link.href}
+            class:list={[
+              "transition-colors",
+              isActive 
+                ? "text-signal-blue font-semibold underline underline-offset-4 decoration-signal-blue" 
+                : "text-ink-muted hover:text-ink"
+            ]}
+          >
+            {link.label}
+          </a>
+        );
+      })}
+
+      <!-- Divider -->
+      <span class="h-3 w-px bg-border-line"></span>
+
+      {externalLinks.map((ext) => (
+        <a
+          href={ext.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-ink-faint hover:text-ink transition-colors"
+        >
+          {ext.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>

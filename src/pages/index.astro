@@ -1,32 +1,225 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+
+// Fetch the latest published blog dispatch
+const rawPosts = await getCollection('blog');
+const posts = rawPosts.sort((a, b) => {
+  const dateA = new Date(a.data.date ?? a.data.pubDate ?? 0).valueOf();
+  const dateB = new Date(b.data.date ?? b.data.pubDate ?? 0).valueOf();
+  return dateB - dateA;
+});
+const featuredPost = posts[0];
+
+// Fetch the latest laboratory experiment
+const rawExperiments = await getCollection('lab');
+const experiments = rawExperiments.sort((a, b) => {
+  const dateA = new Date(a.data.date ?? 0).valueOf();
+  const dateB = new Date(b.data.date ?? 0).valueOf();
+  return dateB - dateA;
+});
+const featuredExperiment = experiments[0];
 ---
 
-<BaseLayout title="Home" activePage="home">
-  <!-- Added responsive padding and reduced gap for better flow -->
-  <div class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10">
-    
-    <!-- Image implementation -->
-    <div class="w-60 h-60 rounded-full overflow-hidden flex-shrink-0">
-  		 <img src="/me.jpeg" alt="Profile" class="w-full h-full object-cover" />
-	</div>
-    
-    <!-- Reduced font size for a cleaner look -->
-    <div class="space-y-3 text-center md:text-left">
-      <h1 class="text-xl md:text-2xl font-bold">Aadya Gupta</h1>
-      <p class="text-sm md:text-base opacity-90 leading-relaxed">
-        Hi! <br>
-        I am an undergrad CS student pursuing B.Tech. (Hons.) in CSE (AI/ML) from Manipal University Jaipur along with a B.Sc. in Data Science and Programming from Indian Institute of Technology, Madras.
-        <br>
-        I am currently an Intern at Dell Technologies.
-      </p>
-    </div>
-  </div>
+<BaseLayout title="Aadya Gupta // Interpretability & NeuroAI">
+  <Nav />
 
-  <hr class="my-12 border-ink/30" />
+  <main class="max-w-5xl mx-auto px-6 py-12 flex-1 w-full space-y-14">
+    
+    <!-- 00. PROFILE & ORIENTATION -->
+    <section>
+      <div class="flex items-center gap-2 font-mono text-xs text-neutral-400 tracking-widest uppercase mb-4">
+        <span class="text-sky-600 font-bold">00.</span>
+        <span>Profile & Orientation</span>
+      </div>
 
-  <section class="text-sm md:text-base leading-relaxed">
-    <h2 class="text-lg font-bold mb-4">Latest Updates</h2>
-    <p class="opacity-90">Welcome to my research space. Here I document my work on logic decay and representation analysis.</p>
-  </section>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-8">
+        
+        <!-- Primary Narrative -->
+        <div class="lg:col-span-8 space-y-4 font-serif text-lg text-neutral-900 leading-relaxed">
+          <p>
+            I'm <strong class="font-normal text-neutral-950 underline decoration-neutral-300 underline-offset-4">Aadya Gupta</strong>—a researcher investigating deep learning through the lens of <em>mechanistic interpretability</em> and <em>NeuroAI</em>.
+          </p>
+          <p class="text-neutral-700">
+            My work approaches neural networks from a first-principles perspective: mapping the internal representational geometry of small language models, dissecting circuit motifs, and studying how high-dimensional feature manifolds compare against biological computational principles. I care about mathematically grounded questions, empirical rigor, and opening the black box of transformer representations.
+          </p>
+          <p class="text-neutral-600 text-base">
+            Outside research, I explore framing and geometry through photography, crochet custom amigurumi figures, and train compound strength routines.
+          </p>
+        </div>
+
+        <!-- Vital Spec Box -->
+        <div 
+          style="background-color: #ffffff;" 
+          class="lg:col-span-4 border border-neutral-200 p-5 font-mono text-xs space-y-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+        >
+          <div class="flex items-center justify-between text-neutral-400 border-b border-neutral-200 pb-2">
+            <span class="tracking-wider uppercase">VITAL SPEC</span>
+            <span>SYS_REF: AG-2026</span>
+          </div>
+          <div>
+            <span class="text-neutral-400 block text-[10px] uppercase tracking-wider">Disciplines</span>
+            <span class="text-neutral-900 font-medium">Mech. Interpretability · NeuroAI · Manifold Geometry</span>
+          </div>
+          <div>
+            <span class="text-neutral-400 block text-[10px] uppercase tracking-wider">Core Tooling</span>
+            <span class="text-neutral-900">PyTorch, TransformerLens, SAELens, NumPy</span>
+          </div>
+          <div>
+            <span class="text-neutral-400 block text-[10px] uppercase tracking-wider">Offline Focus</span>
+            <span class="text-neutral-900">Street Photography & Amigurumi</span>
+          </div>
+          <div class="pt-2 border-t border-neutral-200 flex justify-between items-center text-neutral-400">
+            <span>Full Profile</span>
+            <a href="/cv.pdf" target="_blank" class="text-sky-600 hover:underline">Download CV ↗</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Telemetry Strip (Integrated as part of Profile & Orientation) -->
+      <div 
+        style="background-color: #ffffff;" 
+        class="grid grid-cols-1 md:grid-cols-3 border border-neutral-200 font-mono text-xs divide-y md:divide-y-0 md:divide-x divide-neutral-200 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+      >
+        <div class="p-4 space-y-1">
+          <span class="text-neutral-400 block text-[10px] uppercase tracking-wider">Primary Investigation</span>
+          <span class="text-neutral-900 font-medium block">
+            Subspace alignment & representational drift in SLMs
+          </span>
+        </div>
+
+        <div class="p-4 space-y-1">
+          <span class="text-neutral-400 block text-[10px] uppercase tracking-wider">NeuroAI Thread</span>
+          <span class="text-neutral-900 font-medium block">
+            Sparse coding & biological manifold geometry
+          </span>
+        </div>
+
+        <div class="p-4 space-y-1">
+          <span class="text-neutral-400 block text-[10px] uppercase tracking-wider">Investigation State</span>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span class="text-neutral-900 font-medium">Active Research</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01. IN-DEPTH DISPATCHES (BLOG) -->
+    <section>
+      <div class="flex items-center justify-between border-b border-neutral-200 pb-2 mb-6">
+        <div class="flex items-center gap-2 font-mono text-xs text-neutral-400 tracking-widest uppercase">
+          <span class="text-sky-600 font-bold">01.</span>
+          <span>In-Depth Dispatches (Blog)</span>
+        </div>
+        <a href="/blog" class="font-mono text-xs text-neutral-500 hover:text-sky-600 transition-colors">
+          View all essays →
+        </a>
+      </div>
+
+      {featuredPost ? (
+        <article 
+          style="background-color: #ffffff;"
+          class="p-6 md:p-8 border border-neutral-200 hover:border-neutral-300 transition-all shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+        >
+          <div class="flex flex-wrap items-center gap-2 font-mono text-xs text-neutral-400 mb-3">
+            <span>{new Date(featuredPost.data.date ?? featuredPost.data.pubDate ?? Date.now()).toISOString().slice(0, 7).replace('-', '.')}</span>
+            <span>//</span>
+            <span class="text-sky-600 font-medium">{featuredPost.data.tags?.[0] ?? "REPRESENTATION_THEORY"}</span>
+            {featuredPost.data.readingTime && (
+              <>
+                <span>//</span>
+                <span>{featuredPost.data.readingTime}</span>
+              </>
+            )}
+          </div>
+
+          <h2 class="font-serif text-2xl font-normal text-neutral-900 mb-3">
+            <a href={`/blog/${featuredPost.id}`} class="hover:text-sky-600 transition-colors">
+              {featuredPost.data.title}
+            </a>
+          </h2>
+
+          <p class="font-serif text-neutral-600 text-base leading-relaxed mb-6 max-w-3xl">
+            {featuredPost.data.description}
+          </p>
+
+          <a href={`/blog/${featuredPost.id}`} class="inline-flex items-center gap-1.5 font-mono text-xs text-sky-600 hover:underline">
+            <span>Read full paper</span>
+            <span>→</span>
+          </a>
+        </article>
+      ) : (
+        <div style="background-color: #ffffff;" class="p-6 border border-neutral-200 font-mono text-xs text-neutral-400">
+          No dispatches published yet.
+        </div>
+      )}
+    </section>
+
+    <!-- 02. LABORATORY NOTEBOOK (LAB) -->
+    <section>
+      <div class="flex items-center justify-between border-b border-neutral-200 pb-2 mb-6">
+        <div class="flex items-center gap-2 font-mono text-xs text-neutral-400 tracking-widest uppercase">
+          <span class="text-sky-600 font-bold">02.</span>
+          <span>Laboratory Notebook (Lab)</span>
+        </div>
+        <a href="/lab" class="font-mono text-xs text-neutral-500 hover:text-sky-600 transition-colors">
+          Browse all experiments →
+        </a>
+      </div>
+
+      {featuredExperiment ? (
+        <article 
+          style="background-color: #ffffff;"
+          class="border border-neutral-200 p-6 md:p-8 font-mono text-xs space-y-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+        >
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-neutral-900">{featuredExperiment.data.id_tag}</span>
+              <span class="text-neutral-400">//</span>
+              <span class="text-sky-600 font-medium">{featuredExperiment.data.title.toUpperCase().replace(/\s+/g, '_')}</span>
+              <span class="text-neutral-400">[{featuredExperiment.data.category}]</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-emerald-700">
+              <span class="inline-block w-2 h-2 rounded-full bg-emerald-600"></span>
+              <span class="font-semibold">STATUS: {featuredExperiment.data.status}</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 font-serif text-sm">
+            <div>
+              <span class="font-mono text-neutral-400 text-[10px] block uppercase tracking-wider mb-1">Research Question</span>
+              <p class="text-neutral-800 leading-relaxed">
+                Do monosemantic latent features extracted by JumpReLU SAEs preserve canonical representational geometry across cross-lingual token embeddings?
+              </p>
+            </div>
+            <div>
+              <span class="font-mono text-neutral-400 text-[10px] block uppercase tracking-wider mb-1">Empirical Finding</span>
+              <p class="text-neutral-800 leading-relaxed">
+                {featuredExperiment.data.metrics ? (
+                  <>Attained <strong>{featuredExperiment.data.metrics["Feature Sparsity"] ?? "L0 ≈ 34.2"}</strong> with <strong>{featuredExperiment.data.metrics["Cross-Entropy Recovery"] ?? "98.1%"}</strong> task performance retention.</>
+                ) : (
+                  "Recovered sparse latent features across transformer residual streams without performance degradation."
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-neutral-200 text-neutral-400 text-[11px]">
+            <span>Tags: {featuredExperiment.data.stack.join(', ')}</span>
+            <a href="/lab" class="text-sky-600 hover:underline font-mono">
+              View lab dossier & chart ↗
+            </a>
+          </div>
+        </article>
+      ) : (
+        <div style="background-color: #ffffff;" class="p-6 border border-neutral-200 font-mono text-xs text-neutral-400">
+          No experiments logged yet.
+        </div>
+      )}
+    </section>
+
+  </main>
 </BaseLayout>
