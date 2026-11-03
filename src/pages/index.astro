@@ -78,12 +78,12 @@ const featuredExperiment = experiments[0];
       </div>
     </section>
 
-    <!-- 01. IN-DEPTH DISPATCHES (BLOG) -->
+    <!-- 01. BLOGS -->
     <section>
       <div class="flex items-center justify-between border-b border-neutral-200 pb-2 mb-4 sm:mb-6">
         <div class="flex items-center gap-2 font-mono text-xs text-neutral-400 tracking-widest uppercase">
           <span class="text-sky-600 font-bold">01.</span>
-          <span>In-Depth Dispatches (Blog)</span>
+          <span>Blogs</span>
         </div>
         <a href="/blog" class="font-mono text-xs text-neutral-500 hover:text-sky-600 transition-colors">
           View all essays →
@@ -124,17 +124,17 @@ const featuredExperiment = experiments[0];
         </article>
       ) : (
         <div style="background-color: #ffffff;" class="p-6 border border-neutral-200 font-mono text-xs text-neutral-400">
-          No dispatches published yet.
+          No blogs published yet.
         </div>
       )}
     </section>
 
-    <!-- 02. LABORATORY NOTEBOOK (LAB) -->
+    <!-- 02. LAB NOTEBOOK -->
     <section>
       <div class="flex items-center justify-between border-b border-neutral-200 pb-2 mb-4 sm:mb-6">
         <div class="flex items-center gap-2 font-mono text-xs text-neutral-400 tracking-widest uppercase">
           <span class="text-sky-600 font-bold">02.</span>
-          <span>Laboratory Notebook (Lab)</span>
+          <span>Lab Notebook</span>
         </div>
         <a href="/lab" class="font-mono text-xs text-neutral-500 hover:text-sky-600 transition-colors">
           Browse all experiments →
@@ -150,12 +150,12 @@ const featuredExperiment = experiments[0];
             <div class="flex flex-wrap items-center gap-1.5 break-all">
               <span class="font-bold text-neutral-900">{featuredExperiment.data.id_tag}</span>
               <span class="text-neutral-400">//</span>
-              <span class="text-sky-600 font-medium">{featuredExperiment.data.title.toUpperCase().replace(/\s+/g, '_')}</span>
+              <span class="text-sky-600 font-medium">{featuredExperiment.data.title.toUpperCase().replace(/\s+/g, ' ')}</span>
               <span class="text-neutral-400">[{featuredExperiment.data.category}]</span>
             </div>
-            <div class="text-neutral-700 font-semibold text-xs self-start sm:self-auto shrink-0">
-              STATUS: {featuredExperiment.data.status}
-            </div>
+            <a href={`/lab/`} class="text-sky-600 hover:underline">
+              View full experiment →
+            </a>  
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 font-serif text-sm">

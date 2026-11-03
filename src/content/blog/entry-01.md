@@ -15,9 +15,11 @@ Token sequences sampled across Devanagari and Latin scripts show an orthogonalit
 </aside>
 
 By computing the singular value spectrum across residual stream activations, we can track the exact subspace collapse. Notice how the early projections maintain linear separability while deeper layers suffer from dimensional collapse.
+
 $$
 \mathcal{L}_{\text{sparsity}} = \sum_{l=1}^L \|\mathbf{W}_l\|_0 + \lambda D_{\text{KL}}(P_{\text{Devanagari}} \parallel P_{\text{Latin}})
 $$
+
 <div class="breakout-figure">
   <div style="font-family: monospace; font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
     // FIG 1.0: SINGULAR VALUE SPECTRUM (EXPANDED BREAKOUT CANVAS)

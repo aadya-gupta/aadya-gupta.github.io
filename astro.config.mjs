@@ -3,18 +3,22 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import getReadingTime from 'reading-time';
+import { toString } from 'mdast-util-to-string';
 
-// https://astro.build/config
+export function remarkReadingTime() {
+  return function (tree, { data }) {
+    const text = toString(tree);
+    const readingTime = getReadingTime(text);
+    data.astro.frontmatter.readingTime = `${Math.ceil(readingTime.minutes)} MIN READ`;
+  };
+}
+
 export default defineConfig({
-  // Your GitHub Pages custom or username URL:
   site: 'https://aadya-gupta.github.io',
-  
-  // IF the repo name is "my-research-site" (a project repo):
-  // base: '/my-research-site',
-  // IF the repo name is "aadya-gupta.github.io" (a personal user site), OMIT the `base` line or set base: '/'
-  
+
   markdown: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkMath, remarkReadingTime],
     rehypePlugins: [rehypeKatex],
   },
   vite: {
